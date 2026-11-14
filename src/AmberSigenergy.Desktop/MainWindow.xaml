@@ -23,6 +23,7 @@
                     <TextBlock Text="Not connected" Foreground="#D7DCE2" FontSize="12" VerticalAlignment="Center"/>
                 </StackPanel>
             </Border>
+                    <Button DockPanel.Dock="Right" Content="Connect Amber" Click="ConnectAmber_Click" Padding="16,9" Margin="0,0,12,0" Background="#D99A32" Foreground="#17191D" BorderThickness="0" FontWeight="SemiBold" VerticalAlignment="Center"/>
         </DockPanel>
 
         <UniformGrid Grid.Row="1" Columns="4" Margin="0,0,0,18">
