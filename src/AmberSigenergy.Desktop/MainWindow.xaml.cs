@@ -27,19 +27,12 @@ public partial class MainWindow : Window
             var api = new AmberApiClient(token);
             using var sites = await api.GetSitesAsync();
             var formatted = JsonSerializer.Serialize(sites.RootElement, new JsonSerializerOptions { WriteIndented = true });
-            ShowSelectableText("Amber connected — site details",
-                "Amber API connection successful. The site details are below. Select the channel type values (for E1 and B1), or use Copy all.");
             ShowSiteDetails(formatted);
         }
         catch (Exception ex)
         {
             MessageBox.Show(this, ex.Message, "Amber connection failed", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
-    }
-
-    private void ShowSelectableText(string title, string message)
-    {
-        MessageBox.Show(this, message, title, MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
     private void ShowSiteDetails(string formatted)
