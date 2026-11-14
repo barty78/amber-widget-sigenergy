@@ -81,15 +81,30 @@ public sealed class AmberDashboardService
 
         decimal? currentImport = null;
         decimal? currentExport = null;
+        var currentImportRank = -1;
+        var currentExportRank = -1;
         if (currentDoc.RootElement.ValueKind == JsonValueKind.Array)
         {
             foreach (var price in currentDoc.RootElement.EnumerateArray())
             {
-                var type = GetString(price, "channelType");
+                var channelType = GetString(price, "channelType");
+                var recordType = GetString(price, "type");
                 if (!price.TryGetProperty("perKwh", out var value) || !value.TryGetDecimal(out var cents))
                     continue;
-                if (type == "general") currentImport = cents;
-                if (type == "feedIn") currentExport = cents;
+
+                // Do not let future forecast rows overwrite the live/current price.
+                var rank = recordType == "CurrentInterval" ? 2 : recordType == "ActualInterval" ? 1 : 0;
+                if (rank == 0) continue;
+                if (channelType == "general" && rank >= currentImportRank)
+                {
+                    currentImport = cents;
+                    currentImportRank = rank;
+                }
+                if (channelType == "feedIn" && rank >= currentExportRank)
+                {
+                    currentExport = cents;
+                    currentExportRank = rank;
+                }
             }
         }
 
