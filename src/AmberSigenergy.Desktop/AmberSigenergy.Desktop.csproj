@@ -9,6 +9,6 @@
     <AssemblyName>AmberSigenergy</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
-
+    <None Include="..\\..\\appsettings.example.json" Link="appsettings.example.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>
