@@ -20,7 +20,7 @@
             <Border DockPanel.Dock="Right" Background="#252A32" CornerRadius="16" Padding="14,8" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
                     <Ellipse Width="8" Height="8" Fill="#E0A13B" Margin="0,0,9,0"/>
-                    <TextBlock Text="Not connected" Foreground="#D7DCE2" FontSize="12" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="ConnectionStatusText" Text="Not connected" Foreground="#D7DCE2" FontSize="12" VerticalAlignment="Center"/>
                 </StackPanel>
             </Border>
                     <Button DockPanel.Dock="Right" Content="Connect Amber" Click="ConnectAmber_Click" Padding="16,9" Margin="0,0,12,0" Background="#D99A32" Foreground="#17191D" BorderThickness="0" FontWeight="SemiBold" VerticalAlignment="Center"/>
@@ -28,16 +28,16 @@
 
         <UniformGrid Grid.Row="1" Columns="4" Margin="0,0,0,18">
             <Border Background="{StaticResource PanelBrush}" CornerRadius="12" Padding="18" Margin="0,0,10,0">
-                <StackPanel><TextBlock Text="IMPORT PRICE" Foreground="{StaticResource MutedBrush}" FontSize="11" FontWeight="Bold"/><TextBlock Text="—" FontSize="30" FontWeight="SemiBold" Margin="0,8,0,2"/><TextBlock Text="c/kWh · Amber general" Foreground="{StaticResource MutedBrush}" FontSize="11"/></StackPanel>
+                <StackPanel><TextBlock Text="IMPORT PRICE" Foreground="{StaticResource MutedBrush}" FontSize="11" FontWeight="Bold"/><TextBlock x:Name="ImportPriceText" Text="—" FontSize="30" FontWeight="SemiBold" Margin="0,8,0,2"/><TextBlock Text="c/kWh · Amber general" Foreground="{StaticResource MutedBrush}" FontSize="11"/></StackPanel>
             </Border>
             <Border Background="{StaticResource PanelBrush}" CornerRadius="12" Padding="18" Margin="0,0,10,0">
-                <StackPanel><TextBlock Text="EXPORT PRICE" Foreground="{StaticResource MutedBrush}" FontSize="11" FontWeight="Bold"/><TextBlock Text="—" FontSize="30" FontWeight="SemiBold" Margin="0,8,0,2"/><TextBlock Text="c/kWh · Amber feed-in" Foreground="{StaticResource MutedBrush}" FontSize="11"/></StackPanel>
+                <StackPanel><TextBlock Text="EXPORT PRICE" Foreground="{StaticResource MutedBrush}" FontSize="11" FontWeight="Bold"/><TextBlock x:Name="ExportPriceText" Text="—" FontSize="30" FontWeight="SemiBold" Margin="0,8,0,2"/><TextBlock Text="c/kWh · Amber feed-in" Foreground="{StaticResource MutedBrush}" FontSize="11"/></StackPanel>
             </Border>
             <Border Background="{StaticResource PanelBrush}" CornerRadius="12" Padding="18" Margin="0,0,10,0">
-                <StackPanel><TextBlock Text="EARNED TODAY" Foreground="{StaticResource MutedBrush}" FontSize="11" FontWeight="Bold"/><TextBlock Text="—" FontSize="30" FontWeight="SemiBold" Margin="0,8,0,2"/><TextBlock Text="Gross export credit estimate" Foreground="{StaticResource MutedBrush}" FontSize="11"/></StackPanel>
+                <StackPanel><TextBlock Text="EARNED TODAY" Foreground="{StaticResource MutedBrush}" FontSize="11" FontWeight="Bold"/><TextBlock x:Name="EarnedTodayText" Text="—" FontSize="30" FontWeight="SemiBold" Margin="0,8,0,2"/><TextBlock Text="Gross export credit estimate" Foreground="{StaticResource MutedBrush}" FontSize="11"/></StackPanel>
             </Border>
             <Border Background="{StaticResource PanelBrush}" CornerRadius="12" Padding="18">
-                <StackPanel><TextBlock Text="IMPORT COST TODAY" Foreground="{StaticResource MutedBrush}" FontSize="11" FontWeight="Bold"/><TextBlock Text="—" FontSize="30" FontWeight="SemiBold" Margin="0,8,0,2"/><TextBlock Text="Gross usage cost estimate" Foreground="{StaticResource MutedBrush}" FontSize="11"/></StackPanel>
+                <StackPanel><TextBlock Text="IMPORT COST TODAY" Foreground="{StaticResource MutedBrush}" FontSize="11" FontWeight="Bold"/><TextBlock x:Name="ImportCostTodayText" Text="—" FontSize="30" FontWeight="SemiBold" Margin="0,8,0,2"/><TextBlock Text="Gross usage cost estimate" Foreground="{StaticResource MutedBrush}" FontSize="11"/></StackPanel>
             </Border>
         </UniformGrid>
 
@@ -46,28 +46,28 @@
             <Border Grid.Column="0" Background="{StaticResource PanelBrush}" CornerRadius="14" Padding="22" Margin="0,0,12,0">
                 <StackPanel>
                     <TextBlock Text="LIVE ENERGY FLOW" FontSize="15" FontWeight="SemiBold"/>
-                    <TextBlock Text="Solar, home, battery and grid telemetry will appear here." Foreground="{StaticResource MutedBrush}" Margin="0,5,0,20" FontSize="12"/>
+                    <TextBlock Text="Live inverter readings · read-only Modbus TCP." Foreground="{StaticResource MutedBrush}" Margin="0,5,0,20" FontSize="12"/>
                     <Grid Height="245">
                         <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
                             <TextBlock Text="SOLAR" Foreground="#D99A32" FontWeight="Bold" HorizontalAlignment="Center"/>
-                            <TextBlock Text="— kW" FontSize="24" Margin="0,8"/>
+                            <TextBlock x:Name="SolarPowerText" Text="— kW" FontSize="24" Margin="0,8"/>
                             <TextBlock Text="PV generation" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
                         </StackPanel>
                         <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
                             <TextBlock Text="BATTERY" Foreground="#70B8A2" FontWeight="Bold" HorizontalAlignment="Center"/>
-                            <TextBlock Text="— %" FontSize="28" Margin="0,8"/>
-                            <TextBlock Text="— / 40 kWh" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
-                            <TextBlock Text="— kW" FontSize="16" Margin="0,12,0,0"/>
+                            <TextBlock x:Name="BatterySocText" Text="— %" FontSize="28" Margin="0,8"/>
+                            <TextBlock x:Name="BatteryEnergyText" Text="— / 40 kWh" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
+                            <TextBlock x:Name="BatteryPowerText" Text="— kW" FontSize="16" Margin="0,12,0,0"/>
                         </StackPanel>
                         <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">
                             <TextBlock Text="GRID" Foreground="#82A8D8" FontWeight="Bold" HorizontalAlignment="Center"/>
-                            <TextBlock Text="— kW" FontSize="24" Margin="0,8"/>
+                            <TextBlock x:Name="GridPowerText" Text="— kW" FontSize="24" Margin="0,8"/>
                             <TextBlock Text="Import / export" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
                         </StackPanel>
                     </Grid>
                     <Border Background="#292F38" CornerRadius="8" Padding="12" Margin="0,14,0,0">
-                        <TextBlock Text="Read-only monitoring · inverter telemetry not yet configured" Foreground="{StaticResource MutedBrush}" FontSize="11" TextAlignment="Center"/>
+                        <TextBlock x:Name="TelemetryStatusText" Text="Read-only monitoring · waiting for connection" Foreground="{StaticResource MutedBrush}" FontSize="11" TextAlignment="Center"/>
                     </Border>
                 </StackPanel>
             </Border>
@@ -75,12 +75,12 @@
                 <Border Background="{StaticResource PanelBrush}" CornerRadius="14" Padding="20" Margin="0,0,0,12">
                     <StackPanel>
                         <TextBlock Text="TODAY'S ENERGY ACCOUNT" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,14"/>
-                        <Grid Margin="0,0,0,9"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Grid imported" Foreground="{StaticResource MutedBrush}"/><TextBlock Grid.Column="1" Text="— kWh"/></Grid>
-                        <Grid Margin="0,0,0,9"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Grid exported" Foreground="{StaticResource MutedBrush}"/><TextBlock Grid.Column="1" Text="— kWh"/></Grid>
-                        <Grid Margin="0,0,0,9"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Export earnings" Foreground="{StaticResource MutedBrush}"/><TextBlock Grid.Column="1" Text="—" Foreground="#70B8A2"/></Grid>
-                        <Grid Margin="0,0,0,9"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Import cost" Foreground="{StaticResource MutedBrush}"/><TextBlock Grid.Column="1" Text="—"/></Grid>
+                        <Grid Margin="0,0,0,9"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Grid imported" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="ImportedKwhText" Grid.Column="1" Text="— kWh"/></Grid>
+                        <Grid Margin="0,0,0,9"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Grid exported" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="ExportedKwhText" Grid.Column="1" Text="— kWh"/></Grid>
+                        <Grid Margin="0,0,0,9"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Export earnings" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="ExportEarningsText" Grid.Column="1" Text="—" Foreground="#70B8A2"/></Grid>
+                        <Grid Margin="0,0,0,9"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Import cost" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="ImportCostText" Grid.Column="1" Text="—"/></Grid>
                         <Separator Background="#3A414B" Margin="0,8"/>
-                        <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Net energy value" FontWeight="SemiBold"/><TextBlock Grid.Column="1" Text="—" FontWeight="SemiBold"/></Grid>
+                        <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Net energy value" FontWeight="SemiBold"/><TextBlock x:Name="NetEnergyValueText" Grid.Column="1" Text="—" FontWeight="SemiBold"/></Grid>
                         <TextBlock Text="Excludes daily supply charges, subscription and other bill adjustments." Foreground="{StaticResource MutedBrush}" FontSize="10" TextWrapping="Wrap" Margin="0,10,0,0"/>
                     </StackPanel>
                 </Border>
@@ -89,8 +89,8 @@
                         <TextBlock Text="BATTERY" FontSize="15" FontWeight="SemiBold"/>
                         <TextBlock Text="40 kWh nameplate capacity" Foreground="{StaticResource MutedBrush}" FontSize="11" Margin="0,4,0,15"/>
                         <TextBlock Text="State of charge" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
-                        <Border Background="#39414C" Height="10" CornerRadius="5" Margin="0,8,0,12"/>
-                        <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Charge / discharge" Foreground="{StaticResource MutedBrush}"/><TextBlock Grid.Column="1" Text="— kW"/></Grid>
+                        <Border x:Name="BatterySocBar" Background="#70B8A2" Height="10" Width="0" HorizontalAlignment="Left" CornerRadius="5" Margin="0,8,0,12"/>
+                        <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Charge / discharge" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="BatteryPowerSummaryText" Grid.Column="1" Text="— kW"/></Grid>
                     </StackPanel>
                 </Border>
             </StackPanel>
