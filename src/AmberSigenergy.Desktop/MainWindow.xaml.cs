@@ -116,19 +116,26 @@ public partial class MainWindow : Window
         {
             if (_sigenergy is not null)
             {
-                var telemetry = await _sigenergy.ReadPlantTelemetryAsync();
-                UpdateSigenergyDashboard(telemetry);
-                if (_amberDashboard is not null && DateTimeOffset.Now - _lastAmberRefresh >= TimeSpan.FromMinutes(1))
-                    await RefreshAmberAsync();
+                try
+                {
+                    var telemetry = await _sigenergy.ReadPlantTelemetryAsync();
+                    UpdateSigenergyDashboard(telemetry);
+                }
+                catch (Exception ex)
+                {
+                    TelemetryStatusText.Text = "Sigenergy Modbus: " + ex.Message;
+                    if (_amberSnapshot is not null)
+                        ConnectionStatusText.Text = "Amber connected · inverter unavailable";
+                    else
+                        ConnectionStatusText.Text = "Waiting for connections";
+                }
             }
-        }
-        catch (Exception ex)
-        {
-            TelemetryStatusText.Text = "Sigenergy Modbus: " + ex.Message;
-            if (_amberSnapshot is not null)
-                ConnectionStatusText.Text = "Amber connected · inverter unavailable";
-            else
-                ConnectionStatusText.Text = "Waiting for connections";
+
+            if (_amberDashboard is not null && DateTimeOffset.Now - _lastAmberRefresh >= TimeSpan.FromMinutes(1))
+            {
+                try { await RefreshAmberAsync(); }
+                catch (Exception ex) { ConnectionStatusText.Text = "Amber refresh failed"; TelemetryStatusText.Text = "Amber: " + ex.Message; }
+            }
         }
         finally
         {
