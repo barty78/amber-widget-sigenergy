@@ -98,7 +98,7 @@ public partial class MainWindow : Window
         ExportedKwhText.Text = $"{data.Today.ExportedKwh:0.00} kWh";
         ExportEarningsText.Text = data.Today.ExportEarnings.ToString("C2");
         ImportCostText.Text = data.Today.ImportCost.ToString("C2");
-        NetEnergyValueText.Text = data.Today.NetEnergyValue.ToString("+C2;-C2;C2");
+        NetEnergyValueText.Text = data.Today.NetEnergyValue >= 0 ? $"+{data.Today.NetEnergyValue:C2}" : $"-{Math.Abs(data.Today.NetEnergyValue):C2}";
 
         var importCoverage = data.Today.ImportedKwh <= 0 ? "n/a" : $"{data.PricedImportIntervals}/{data.UsageIntervals}";
         var exportCoverage = data.Today.ExportedKwh <= 0 ? "n/a" : $"{data.PricedExportIntervals}/{data.UsageIntervals}";
