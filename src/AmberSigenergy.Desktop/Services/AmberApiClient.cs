@@ -20,7 +20,16 @@ public sealed class AmberApiClient
 
     public async Task<JsonDocument> GetCurrentPricesAsync(string siteId, int next = 6, int previous = 1, CancellationToken ct = default)
     {
-        var path = $"sites/{Uri.EscapeDataString(siteId)}/prices/current?next={next}&previous={previous}&resolution=30";
+        // Omit resolution so Amber returns the site's native settlement interval.
+        var path = $"sites/{Uri.EscapeDataString(siteId)}/prices/current?next={next}&previous={previous}";
+        return await GetJsonAsync(path, ct);
+    }
+
+    public async Task<JsonDocument> GetPricesAsync(string siteId, DateOnly start, DateOnly end, int resolution, CancellationToken ct = default)
+    {
+        if (end < start) throw new ArgumentException("End date must be on or after start date.");
+        if (resolution is not (5 or 30)) throw new ArgumentOutOfRangeException(nameof(resolution), "Amber price resolution must be 5 or 30 minutes.");
+        var path = $"sites/{Uri.EscapeDataString(siteId)}/prices?startDate={start:yyyy-MM-dd}&endDate={end:yyyy-MM-dd}&resolution={resolution}";
         return await GetJsonAsync(path, ct);
     }
 
@@ -28,7 +37,8 @@ public sealed class AmberApiClient
     {
         if (end < start) throw new ArgumentException("End date must be on or after start date.");
         if (end.DayNumber - start.DayNumber > 89) throw new ArgumentOutOfRangeException(nameof(end), "Amber usage API supports up to 90 days per request.");
-        var path = $"sites/{Uri.EscapeDataString(siteId)}/usage?startDate={start:yyyy-MM-dd}&endDate={end:yyyy-MM-dd}&resolution=30";
+        // Usage is always returned at the site's billing-native interval length; resolution is deprecated.
+        var path = $"sites/{Uri.EscapeDataString(siteId)}/usage?startDate={start:yyyy-MM-dd}&endDate={end:yyyy-MM-dd}";
         return await GetJsonAsync(path, ct);
     }
 
