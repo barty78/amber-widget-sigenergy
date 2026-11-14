@@ -74,7 +74,7 @@ public partial class MainWindow : Window
         catch (Exception ex)
         {
             ConnectionStatusText.Text = "Amber connection error";
-            TelemetryStatusText.Text = "Amber: " + ex.Message;
+            AmberStatusText.Text = "Amber: " + ex.Message;
         }
     }
 
@@ -102,7 +102,7 @@ public partial class MainWindow : Window
 
         var importCoverage = data.Today.ImportedKwh <= 0 ? "n/a" : $"{data.PricedImportIntervals}/{data.UsageIntervals}";
         var exportCoverage = data.Today.ExportedKwh <= 0 ? "n/a" : $"{data.PricedExportIntervals}/{data.UsageIntervals}";
-        TelemetryStatusText.Text = $"Amber · {data.Network} · {data.IntervalMinutes}-min meter · priced intervals import {importCoverage}, export {exportCoverage} · {data.BillableIntervals} billable / {data.EstimatedIntervals} estimated";
+        AmberStatusText.Text = $"Amber · {data.Network} · {data.IntervalMinutes}-min meter · priced intervals import {importCoverage}, export {exportCoverage} · {data.BillableIntervals} billable / {data.EstimatedIntervals} estimated";
         ConnectionStatusText.Text = "Amber connected";
     }
 
@@ -134,7 +134,7 @@ public partial class MainWindow : Window
             if (_amberDashboard is not null && DateTimeOffset.Now - _lastAmberRefresh >= TimeSpan.FromMinutes(1))
             {
                 try { await RefreshAmberAsync(); }
-                catch (Exception ex) { ConnectionStatusText.Text = "Amber refresh failed"; TelemetryStatusText.Text = "Amber: " + ex.Message; }
+                catch (Exception ex) { ConnectionStatusText.Text = "Amber refresh failed"; AmberStatusText.Text = "Amber: " + ex.Message; }
             }
         }
         finally
