@@ -1,3 +1,4 @@
+using System.IO;
 using System.Buffers.Binary;
 using System.Net.Sockets;
 using AmberSigenergy.Desktop.Models;
