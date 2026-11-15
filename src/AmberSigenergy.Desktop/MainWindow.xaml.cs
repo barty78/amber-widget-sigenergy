@@ -230,7 +230,6 @@ public partial class MainWindow : Window
             BatteryStateText.Text = label;
             BatteryStateText.Foreground = new SolidColorBrush(charging ? Color.FromRgb(125, 224, 167) : discharging ? Color.FromRgb(133, 184, 255) : Color.FromRgb(190, 197, 207));
             BatteryPowerText.Text = FormatPower(Math.Abs(power));
-            BatteryPowerSummaryText.Text = $"{FormatPower(Math.Abs(power))} {label.ToLowerInvariant()}";
         }
         var grid = data.GridPowerKw;
         GridPowerText.Text = FormatPower(Math.Abs(grid));
