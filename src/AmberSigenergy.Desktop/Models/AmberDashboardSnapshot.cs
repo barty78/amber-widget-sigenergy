@@ -11,4 +11,5 @@ public sealed record AmberDashboardSnapshot(
     int PricedImportIntervals,
     int PricedExportIntervals,
     int BillableIntervals,
-    int EstimatedIntervals);
+    int EstimatedIntervals,
+    IReadOnlyList<ExportPriceBand> ExportPriceBands);
