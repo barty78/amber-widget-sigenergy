@@ -58,6 +58,7 @@ public sealed class AmberDashboardService
         using var usageDoc = await _api.GetUsageAsync(siteId, today, today, ct);
         using var pricesDoc = await _api.GetPricesAsync(siteId, today, today, intervalMinutes == 5 ? 5 : 30, ct);
         using var currentDoc = await _api.GetCurrentPricesAsync(siteId, 2, 2, ct);
+        var exportPriceBands = BuildExportPriceBands(pricesDoc.RootElement);
 
         var priceMap = new Dictionary<(long UtcTicks, string ChannelType), (decimal Price, bool Actual)>();
         if (pricesDoc.RootElement.ValueKind == JsonValueKind.Array)
@@ -149,9 +150,38 @@ public sealed class AmberDashboardService
         var summary = EnergyAccounting.Summarise(intervals);
         return new AmberDashboardSnapshot(
             siteId, network, intervalMinutes, currentImport, currentExport, summary,
-            intervals.Count, summary.PricedImportIntervals, summary.PricedExportIntervals, billableCount, estimatedCount);
+            intervals.Count, summary.PricedImportIntervals, summary.PricedExportIntervals, billableCount, estimatedCount, exportPriceBands);
     }
 
+    private static IReadOnlyList<ExportPriceBand> BuildExportPriceBands(JsonElement prices)
+    {
+        var buckets = new Dictionary<DateTimeOffset, List<PriceSample>>();
+        if (prices.ValueKind != JsonValueKind.Array) return [];
+        foreach (var price in prices.EnumerateArray())
+        {
+            if (!string.Equals(GetString(price, "channelType"), "feedIn", StringComparison.OrdinalIgnoreCase)) continue;
+            var start = GetDateTimeOffset(price, "startTime");
+            if (start is null || !price.TryGetProperty("perKwh", out var perKwhElement) || !perKwhElement.TryGetDecimal(out var perKwh)) continue;
+            var local = start.Value.ToLocalTime();
+            var block = new DateTimeOffset(local.Year, local.Month, local.Day, local.Hour, (local.Minute / 30) * 30, 0, local.Offset);
+            var low = perKwh; var high = perKwh; var mid = perKwh;
+            if (price.TryGetProperty("advancedPrice", out var advanced) && advanced.ValueKind == JsonValueKind.Object)
+            {
+                if (advanced.TryGetProperty("low", out var lo) && lo.TryGetDecimal(out var lv)) low = lv;
+                if (advanced.TryGetProperty("high", out var hi) && hi.TryGetDecimal(out var hv)) high = hv;
+                if (advanced.TryGetProperty("predicted", out var pr) && pr.TryGetDecimal(out var pv)) mid = pv;
+            }
+            if (!buckets.TryGetValue(block, out var values)) buckets[block] = values = [];
+            values.Add(new PriceSample(low, mid, high, GetString(price, "type") ?? "Unknown"));
+        }
+        return buckets.OrderBy(x => x.Key).Select(bucket => {
+            var samples = bucket.Value;
+            var source = samples.Any(x => x.Type == "ForecastInterval") ? "Forecast" : samples.Any(x => x.Type == "CurrentInterval") ? "Current" : "Actual";
+            return new ExportPriceBand(bucket.Key, samples.Min(x => x.Low), samples.Average(x => x.Mid), samples.Max(x => x.High), source);
+        }).ToArray();
+    }
+
+    private sealed record PriceSample(decimal Low, decimal Mid, decimal High, string Type);
     private static bool StringEquals(JsonElement element, string property, string value) =>
         GetString(element, property)?.Equals(value, StringComparison.OrdinalIgnoreCase) == true;
 
