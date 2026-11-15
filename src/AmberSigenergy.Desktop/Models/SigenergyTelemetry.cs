@@ -7,4 +7,7 @@ public sealed record SigenergyTelemetry(
     double? PlantPowerKw,
     double? PvPowerKw,
     double? BatteryPowerKw,
-    double? RatedBatteryCapacityKwh);
+    double? RatedBatteryCapacityKwh,
+    double? DailySolarGeneratedKwh = null,
+    double? DailyBatteryChargedKwh = null,
+    double? DailyBatteryDischargedKwh = null);
