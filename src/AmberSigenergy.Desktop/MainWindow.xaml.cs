@@ -109,7 +109,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            ConnectionStatusText.Text = "Amber connection error";
+            AmberConnectButton.Content = "Amber !";
             AmberStatusText.Text = "Amber: " + ex.Message;
         }
     }
@@ -139,7 +139,7 @@ public partial class MainWindow : Window
         var importCoverage = data.Today.ImportedKwh <= 0 ? "n/a" : $"{data.PricedImportIntervals}/{data.UsageIntervals}";
         var exportCoverage = data.Today.ExportedKwh <= 0 ? "n/a" : $"{data.PricedExportIntervals}/{data.UsageIntervals}";
         AmberStatusText.Text = $"Amber · {data.Network} · {data.IntervalMinutes}-min meter · priced intervals import {importCoverage}, export {exportCoverage} · {data.BillableIntervals} billable / {data.EstimatedIntervals} estimated";
-        ConnectionStatusText.Text = "Amber connected";
+        AmberConnectButton.Content = "Amber ✓";
         RenderExportPriceChart();
     }
 
@@ -164,16 +164,16 @@ public partial class MainWindow : Window
                 {
                     TelemetryStatusText.Text = "Sigenergy Modbus: " + ex.Message;
                     if (_amberSnapshot is not null)
-                        ConnectionStatusText.Text = "Amber connected · inverter unavailable";
+                        AmberConnectButton.Content = "Amber ✓";
                     else
-                        ConnectionStatusText.Text = "Waiting for connections";
+                        AmberConnectButton.Content = "Amber · connect";
                 }
             }
 
             if (_amberDashboard is not null && DateTimeOffset.Now - _lastAmberRefresh >= TimeSpan.FromMinutes(1))
             {
                 try { await RefreshAmberAsync(); }
-                catch (Exception ex) { ConnectionStatusText.Text = "Amber refresh failed"; AmberStatusText.Text = "Amber: " + ex.Message; }
+                catch (Exception ex) { AmberConnectButton.Content = "Amber !"; AmberStatusText.Text = "Amber: " + ex.Message; }
             }
         }
         finally
@@ -209,7 +209,14 @@ public partial class MainWindow : Window
         if (data.BatteryPowerKw.HasValue)
         {
             var power = data.BatteryPowerKw.Value;
-            var label = Math.Abs(power) < 0.01 ? "Idle" : power > 0 ? "Charging" : "Discharging";
+            var charging = power > 0.03;
+            var discharging = power < -0.03;
+            var label = charging ? "CHARGING" : discharging ? "DISCHARGING" : "IDLE";
+            var accent = charging ? Color.FromRgb(43, 130, 91) : discharging ? Color.FromRgb(45, 105, 177) : Color.FromRgb(65, 73, 84);
+            BatteryStatePanel.Background = new SolidColorBrush(Color.FromArgb(55, accent.R, accent.G, accent.B));
+            BatteryStatePanel.BorderBrush = new SolidColorBrush(accent);
+            BatteryStateText.Text = label;
+            BatteryStateText.Foreground = new SolidColorBrush(charging ? Color.FromRgb(125, 224, 167) : discharging ? Color.FromRgb(133, 184, 255) : Color.FromRgb(190, 197, 207));
             BatteryPowerText.Text = FormatPower(Math.Abs(power));
             BatteryPowerSummaryText.Text = $"{FormatPower(Math.Abs(power))} {label.ToLowerInvariant()}";
         }
@@ -220,7 +227,7 @@ public partial class MainWindow : Window
         UpdateTraySummary(data);
         TelemetryStatusText.Text = $"Sigenergy read OK · {flow} · {data.ReadAt.ToLocalTime():HH:mm:ss} · read-only";
         if (_amberSnapshot is not null)
-            ConnectionStatusText.Text = "Amber + Sigenergy connected";
+            AmberConnectButton.Content = "Amber ✓";
     }
 
     private void UpdateTraySummary(SigenergyTelemetry data)
@@ -237,7 +244,9 @@ public partial class MainWindow : Window
         var gridDirection = data.GridPowerKw > 0.01 ? "in" : data.GridPowerKw < -0.01 ? "out" : "bal";
         var grid = CompactPower(data.GridPowerKw);
         var soc = data.BatterySocPercent.HasValue ? $"{data.BatterySocPercent.Value:0}%" : "—";
-        var summary = $"PV {pv} · Home {load} · Grid {gridDirection} {grid} · Bat {soc}";
+        var batteryPower = data.BatteryPowerKw ?? 0;
+        var batteryState = batteryPower > 0.03 ? "CHG" : batteryPower < -0.03 ? "DIS" : "IDLE";
+        var summary = $"BAT {batteryState} {CompactPower(batteryPower)} · SOC {soc} · PV {pv} · Grid {gridDirection} {grid} · Home {load}";
         // Windows NotifyIcon tooltip text is limited to 63 characters.
         _trayIcon.Text = summary.Length <= 63 ? summary : summary[..63];
     }
@@ -259,7 +268,7 @@ public partial class MainWindow : Window
         SigDailyLoadText.Text = $"{totals.HomeLoadKwh:0.00} kWh";
         SigDailyChargeText.Text = $"{totals.BatteryChargedKwh:0.00} kWh";
         SigDailyDischargeText.Text = $"{totals.BatteryDischargedKwh:0.00} kWh";
-        SigDailyStatusText.Text = $"{totals.Samples:N0} live samples today · accumulated while this app is running";
+        SigDailyStatusText.Text = $"Battery charge/discharge: {( _dailyTracker.HasNativeDailyCounters ? "native Modbus counters" : "integrated estimate")}. Solar: {(_dailyTracker.HasNativePvCounter ? "native/experimental plant counter" : "integrated estimate")}. Grid: integrated from live CT power.";
     }
 
     private void FeedInChartCanvas_SizeChanged(object sender, SizeChangedEventArgs e) => RenderExportPriceChart();
