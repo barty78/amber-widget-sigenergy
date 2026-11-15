@@ -305,7 +305,7 @@ public partial class MainWindow : Window
     private void ShowDashboard()
     {
         Show();
-        WindowState = WindowState.Normal;
+        this.WindowState = System.Windows.WindowState.Normal;
         Activate();
     }
 
