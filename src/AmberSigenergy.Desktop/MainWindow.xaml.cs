@@ -146,8 +146,6 @@ public partial class MainWindow : Window
 
         ImportedKwhText.Text = $"{data.Today.ImportedKwh:0.00} kWh";
         ExportedKwhText.Text = $"{data.Today.ExportedKwh:0.00} kWh";
-        ExportEarningsText.Text = data.Today.ExportEarnings.ToString("C2");
-        ImportCostText.Text = data.Today.ImportCost.ToString("C2");
         NetEnergyValueText.Text = data.Today.NetEnergyValue >= 0 ? $"+{data.Today.NetEnergyValue:C2}" : $"-{Math.Abs(data.Today.NetEnergyValue):C2}";
 
         var importCoverage = data.Today.ImportedKwh <= 0 ? "n/a" : $"{data.PricedImportIntervals}/{data.UsageIntervals}";
@@ -218,7 +216,7 @@ public partial class MainWindow : Window
             var soc = Math.Clamp(data.BatterySocPercent.Value, 0, 100);
             BatterySocText.Text = $"{soc:0.0}%";
             BatteryEnergyText.Text = $"{soc / 100d * capacity:0.0} / {capacity:0.#} kWh";
-            BatterySocBar.Width = Math.Max(0, Math.Min(340, soc * 3.4));
+            BatterySocBar.Width = Math.Max(0, Math.Min(150, soc * 1.5));
         }
         if (data.BatteryPowerKw.HasValue)
         {
@@ -286,8 +284,6 @@ public partial class MainWindow : Window
     private void UpdateDailyDashboard()
     {
         var totals = _dailyTracker.Totals;
-        SigDailyImportText.Text = $"{totals.ImportedKwh:0.00} kWh";
-        SigDailyExportText.Text = $"{totals.ExportedKwh:0.00} kWh";
         SigDailySolarText.Text = $"{totals.SolarGeneratedKwh:0.00} kWh";
         SigDailyLoadText.Text = $"{totals.HomeLoadKwh:0.00} kWh";
         SigDailyChargeText.Text = $"{totals.BatteryChargedKwh:0.00} kWh";
