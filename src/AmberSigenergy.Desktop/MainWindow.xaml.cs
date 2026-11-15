@@ -217,9 +217,29 @@ public partial class MainWindow : Window
         GridPowerText.Text = FormatPower(Math.Abs(grid));
         var flow = Math.Abs(grid) < 0.01 ? "Grid balanced" : grid > 0 ? "Grid import" : "Grid export";
         HomeLoadText.Text = FormatPower(_dailyTracker.GetHomeLoadKw(data));
+        UpdateTraySummary(data);
         TelemetryStatusText.Text = $"Sigenergy read OK · {flow} · {data.ReadAt.ToLocalTime():HH:mm:ss} · read-only";
         if (_amberSnapshot is not null)
             ConnectionStatusText.Text = "Amber + Sigenergy connected";
+    }
+
+    private void UpdateTraySummary(SigenergyTelemetry data)
+    {
+        static string CompactPower(double? kw)
+        {
+            if (!kw.HasValue) return "—";
+            var watts = Math.Abs(kw.Value) * 1000d;
+            return watts >= 1000d ? $"{watts / 1000d:0.0}kW" : $"{watts:0}W";
+        }
+
+        var pv = CompactPower(data.PvPowerKw);
+        var load = CompactPower(_dailyTracker.GetHomeLoadKw(data));
+        var gridDirection = data.GridPowerKw > 0.01 ? "in" : data.GridPowerKw < -0.01 ? "out" : "bal";
+        var grid = CompactPower(data.GridPowerKw);
+        var soc = data.BatterySocPercent.HasValue ? $"{data.BatterySocPercent.Value:0}%" : "—";
+        var summary = $"PV {pv} · Home {load} · Grid {gridDirection} {grid} · Bat {soc}";
+        // Windows NotifyIcon tooltip text is limited to 63 characters.
+        _trayIcon.Text = summary.Length <= 63 ? summary : summary[..63];
     }
 
     private static string FormatPower(double powerKw)
