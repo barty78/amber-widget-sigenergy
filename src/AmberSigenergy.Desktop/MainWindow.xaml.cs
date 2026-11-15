@@ -293,7 +293,7 @@ public partial class MainWindow : Window
         SigDailyLoadText.Text = $"{totals.HomeLoadKwh:0.00} kWh";
         SigDailyChargeText.Text = $"{totals.BatteryChargedKwh:0.00} kWh";
         SigDailyDischargeText.Text = $"{totals.BatteryDischargedKwh:0.00} kWh";
-        SigDailyStatusText.Text = $"Battery charge/discharge: {( _dailyTracker.HasNativeDailyCounters ? "native Modbus counters" : "integrated estimate")}. Solar: {(_dailyTracker.HasNativePvCounter ? "native/experimental plant counter" : "integrated estimate")}. Grid: integrated from live CT power.";
+        SigDailyStatusText.Text = $"Battery charge/discharge: {( _dailyTracker.HasNativeDailyCounters ? "native Modbus counters" : "integrated estimate")}. Solar: {(_dailyTracker.HasNativePvCounter ? "native/experimental plant counter" : "integrated estimate")}. Home load: integrated from live power balance. Grid: integrated from live CT power.";
     }
 
     private void FeedInChartCanvas_SizeChanged(object sender, SizeChangedEventArgs e) => RenderExportPriceChart();
