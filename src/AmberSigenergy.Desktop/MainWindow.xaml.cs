@@ -1,6 +1,6 @@
-using System.Drawing;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Controls;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using Forms = System.Windows.Forms;
@@ -34,7 +34,7 @@ public partial class MainWindow : Window
         trayMenu.Items.Add("Exit", null, (_, _) => ExitFromTray());
         _trayIcon = new Forms.NotifyIcon
         {
-            Icon = SystemIcons.Application,
+            Icon = System.Drawing.SystemIcons.Application,
             Text = "Amber + Sigenergy",
             ContextMenuStrip = trayMenu,
             Visible = true
@@ -261,11 +261,10 @@ public partial class MainWindow : Window
                 AddChartText(p.BlockStart.ToLocalTime().ToString("HH:mm"), x - 16, top + height + 5, "#9BA4B0", 9);
         }
         FeedInChartCanvas.Children.Add(line);
-        foreach (var p in points)
+        for (var i = 0; i < points.Count; i++)
         {
-            var i = points.IndexOf(p);
             var dot = new System.Windows.Shapes.Ellipse { Width = 4, Height = 4, Fill = new SolidColorBrush(Color.FromRgb(217, 154, 50)) };
-            Canvas.SetLeft(dot, X(i) - 2); Canvas.SetTop(dot, Y(p.MidCents) - 2);
+            Canvas.SetLeft(dot, X(i) - 2); Canvas.SetTop(dot, Y(points[i].MidCents) - 2);
             FeedInChartCanvas.Children.Add(dot);
         }
     }
