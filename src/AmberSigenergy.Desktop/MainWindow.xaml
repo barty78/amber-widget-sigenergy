@@ -21,12 +21,12 @@
             <Button x:Name="AmberConnectButton" DockPanel.Dock="Right" Content="Amber · connect" Click="ConnectAmber_Click" Padding="10,6" Margin="0,0,2,0" Background="#252A32" Foreground="#E8B65B" BorderBrush="#66502C" BorderThickness="1" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" ToolTip="Connect or reconnect Amber"/>
         </DockPanel>
 
-        <UniformGrid Grid.Row="1" Columns="4" Margin="0,0,0,10">
+        <UniformGrid Grid.Row="1" Columns="4" Height="82" Margin="0,0,0,10">
             <Border Background="{StaticResource PanelBrush}" CornerRadius="12" Padding="12" Margin="0,0,10,0">
-                <StackPanel><TextBlock Text="IMPORT PRICE" Foreground="{StaticResource MutedBrush}" FontSize="11" FontWeight="Bold"/><TextBlock x:Name="ImportPriceText" Text="—" FontSize="27" FontWeight="SemiBold" Margin="0,4,0,1"/><TextBlock Text="c/kWh · Amber general" Foreground="{StaticResource MutedBrush}" FontSize="11"/></StackPanel>
+                <StackPanel><TextBlock Text="IMPORT PRICE" Foreground="{StaticResource MutedBrush}" FontSize="11" FontWeight="Bold"/><TextBlock x:Name="ImportPriceText" Text="—" FontSize="25" FontWeight="SemiBold" Margin="0,2,0,0"/><TextBlock Text="c/kWh · Amber general" Foreground="{StaticResource MutedBrush}" FontSize="11"/></StackPanel>
             </Border>
-            <Border Background="{StaticResource PanelBrush}" CornerRadius="12" Padding="18" Margin="0,0,10,0">
-                <StackPanel><TextBlock Text="EXPORT PRICE" Foreground="{StaticResource MutedBrush}" FontSize="11" FontWeight="Bold"/><TextBlock x:Name="ExportPriceText" Text="—" FontSize="30" FontWeight="SemiBold" Margin="0,8,0,2"/><TextBlock Text="c/kWh · Amber feed-in" Foreground="{StaticResource MutedBrush}" FontSize="11"/></StackPanel>
+            <Border Background="{StaticResource PanelBrush}" CornerRadius="12" Padding="10" Margin="0,0,10,0">
+                <StackPanel><TextBlock Text="EXPORT PRICE" Foreground="{StaticResource MutedBrush}" FontSize="11" FontWeight="Bold"/><TextBlock x:Name="ExportPriceText" Text="—" FontSize="25" FontWeight="SemiBold" Margin="0,2,0,0"/><TextBlock Text="c/kWh · Amber feed-in" Foreground="{StaticResource MutedBrush}" FontSize="11"/></StackPanel>
             </Border>
             <Border Background="{StaticResource PanelBrush}" CornerRadius="12" Padding="18" Margin="0,0,10,0">
                 <StackPanel><TextBlock Text="EARNED TODAY" Foreground="{StaticResource MutedBrush}" FontSize="11" FontWeight="Bold"/><TextBlock x:Name="EarnedTodayText" Text="—" FontSize="30" FontWeight="SemiBold" Margin="0,8,0,2"/><TextBlock Text="Gross export credit estimate" Foreground="{StaticResource MutedBrush}" FontSize="11"/></StackPanel>
@@ -39,10 +39,14 @@
         <Grid Grid.Row="2" MinHeight="0">
             <Grid.ColumnDefinitions><ColumnDefinition Width="1.55*"/><ColumnDefinition Width="0.8*"/></Grid.ColumnDefinitions>
             <Border Grid.Column="0" Background="{StaticResource PanelBrush}" CornerRadius="14" Padding="14" Margin="0,0,10,0">
-                <StackPanel>
-                    <TextBlock Text="LIVE ENERGY FLOW" FontSize="15" FontWeight="SemiBold"/>
+                <Grid>
+                    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0">
+                        <TextBlock Text="LIVE ENERGY FLOW" FontSize="15" FontWeight="SemiBold"/>
+                        <TextBlock Text="Live inverter readings · read-only Modbus TCP." Foreground="{StaticResource MutedBrush}" Margin="0,4,0,4" FontSize="11"/>
+                    </StackPanel>
                     <TextBlock Text="Live inverter readings · read-only Modbus TCP." Foreground="{StaticResource MutedBrush}" Margin="0,4,0,8" FontSize="11"/>
-                    <Grid Height="176">
+                    <Grid Grid.Row="1" MinHeight="0">
                         <Grid.ColumnDefinitions><ColumnDefinition Width="1*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="1.2*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="1*"/></Grid.ColumnDefinitions>
                         <Grid.RowDefinitions><RowDefinition Height="0.8*"/><RowDefinition Height="1.2*"/></Grid.RowDefinitions>
                         <Border Grid.Column="0" Grid.Row="0" Background="#30291F" CornerRadius="12" Padding="12" Margin="0,4,6,4">
@@ -87,7 +91,7 @@
                         </Border>
                         <TextBlock Grid.Column="3" Grid.ColumnSpan="2" Grid.Row="1" Text="Battery ↔ Home" Foreground="{StaticResource MutedBrush}" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                     </Grid>
-                    <Border Background="#292F38" CornerRadius="8" Padding="12" Margin="0,14,0,0">
+                    <Border Grid.Row="2" Background="#292F38" CornerRadius="8" Padding="8" Margin="0,6,0,0">
                         <TextBlock x:Name="TelemetryStatusText" Text="Read-only monitoring · waiting for connection" Foreground="{StaticResource MutedBrush}" FontSize="11" TextAlignment="Center"/>
                     </Border>
                 </StackPanel>
