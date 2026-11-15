@@ -9,6 +9,7 @@ public sealed record AppSettings(
     string SigenergyHost,
     int SigenergyPort,
     byte SigenergyUnitId,
+    byte SigenergyInverterUnitId,
     int PollIntervalSeconds)
 {
     public static AppSettings Load()
@@ -38,6 +39,7 @@ public sealed record AppSettings(
             sig.ValueKind == JsonValueKind.Object && sig.TryGetProperty("Host", out var host) ? host.GetString() ?? "127.0.0.1" : "127.0.0.1",
             sig.ValueKind == JsonValueKind.Object && sig.TryGetProperty("Port", out var port) ? port.GetInt32() : 502,
             sig.ValueKind == JsonValueKind.Object && sig.TryGetProperty("PlantUnitId", out var unit) ? checked((byte)unit.GetInt32()) : (byte)247,
+            sig.ValueKind == JsonValueKind.Object && sig.TryGetProperty("InverterUnitId", out var inverterUnit) ? checked((byte)inverterUnit.GetInt32()) : (byte)1,
             sig.ValueKind == JsonValueKind.Object && sig.TryGetProperty("PollIntervalSeconds", out var poll) ? Math.Clamp(poll.GetInt32(), 2, 60) : 5);
     }
 }
