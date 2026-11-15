@@ -26,6 +26,9 @@ public partial class MainWindow : Window
     private readonly DispatcherTimer _refreshTimer = new();
     private readonly SigenergyDailyEnergyTracker _dailyTracker = new();
     private readonly Forms.NotifyIcon _trayIcon;
+    private readonly TrayHoverWindow _trayHoverWindow = new();
+    private readonly DispatcherTimer _trayHoverTimer = new();
+    private DateTime _lastTrayHover = DateTime.MinValue;
     private AppSettings? _settings;
     private AmberApiClient? _amberApi;
     private AmberDashboardService? _amberDashboard;
@@ -54,6 +57,17 @@ public partial class MainWindow : Window
             Visible = true
         };
         _trayIcon.DoubleClick += (_, _) => ShowDashboard();
+        _trayIcon.MouseMove += (_, _) => ShowTrayHover();
+        _trayHoverWindow.PointerEntered += (_, _) => _trayHoverWindow.IsPointerInside = true;
+        _trayHoverWindow.PointerLeft += (_, _) => _trayHoverWindow.IsPointerInside = false;
+        _trayHoverTimer.Interval = TimeSpan.FromMilliseconds(150);
+        _trayHoverTimer.Tick += (_, _) =>
+        {
+            if (_trayHoverWindow.IsVisible && !_trayHoverWindow.IsPointerInside &&
+                DateTime.UtcNow - _lastTrayHover > TimeSpan.FromMilliseconds(700))
+                _trayHoverWindow.Hide();
+        };
+        _trayHoverTimer.Start();
 
         try
         {
@@ -246,9 +260,19 @@ public partial class MainWindow : Window
         var soc = data.BatterySocPercent.HasValue ? $"{data.BatterySocPercent.Value:0}%" : "—";
         var batteryPower = data.BatteryPowerKw ?? 0;
         var batteryState = batteryPower > 0.03 ? "CHG" : batteryPower < -0.03 ? "DIS" : "IDLE";
-        var summary = $"BAT {batteryState} {CompactPower(batteryPower)} · SOC {soc} · PV {pv} · Grid {gridDirection} {grid} · Home {load}";
-        // Windows NotifyIcon tooltip text is limited to 63 characters.
-        _trayIcon.Text = summary.Length <= 63 ? summary : summary[..63];
+        _trayIcon.Text = $"Amber + Sigenergy · BAT {batteryState}";
+        _trayHoverWindow.UpdateSummary(data, _dailyTracker.GetHomeLoadKw(data));
+    }
+
+    private void ShowTrayHover()
+    {
+        _lastTrayHover = DateTime.UtcNow;
+        if (_trayHoverWindow.IsVisible) return;
+        var cursor = Forms.Cursor.Position;
+        var dpi = System.Windows.Media.VisualTreeHelper.GetDpi(this);
+        _trayHoverWindow.Left = Math.Max(0, cursor.X / dpi.DpiScaleX - 325);
+        _trayHoverWindow.Top = Math.Max(0, cursor.Y / dpi.DpiScaleY - 195);
+        _trayHoverWindow.Show();
     }
 
     private static string FormatPower(double powerKw)
@@ -355,6 +379,8 @@ public partial class MainWindow : Window
     {
         _allowExit = true;
         _refreshTimer.Stop();
+        _trayHoverTimer.Stop();
+        _trayHoverWindow.Close();
         _dailyTracker.Save();
         _trayIcon.Visible = false;
         _trayIcon.Dispose();
