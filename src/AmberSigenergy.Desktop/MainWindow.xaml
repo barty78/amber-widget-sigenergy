@@ -1,7 +1,7 @@
 <Window x:Class="AmberSigenergy.Desktop.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Amber + Sigenergy" Height="960" Width="1180"
+        Icon="AmberSigenergy.ico" Title="Amber + Sigenergy" Height="960" Width="1180"
         MinHeight="850" MinWidth="960"
         Background="#15181D" WindowStartupLocation="CenterScreen" Closing="MainWindow_Closing">
     <Grid Margin="26">
