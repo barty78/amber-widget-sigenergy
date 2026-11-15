@@ -59,6 +59,7 @@ public sealed class AmberDashboardService
         using var pricesDoc = await _api.GetPricesAsync(siteId, today, today, intervalMinutes == 5 ? 5 : 30, ct);
         using var currentDoc = await _api.GetCurrentPricesAsync(siteId, 2, 2, ct);
         var exportPriceBands = BuildExportPriceBands(pricesDoc.RootElement);
+        var nextSlot = FindNextForecastPrices(pricesDoc.RootElement, DateTimeOffset.Now);
 
         var priceMap = new Dictionary<(long UtcTicks, string ChannelType), (decimal Price, bool Actual)>();
         if (pricesDoc.RootElement.ValueKind == JsonValueKind.Array)
@@ -150,7 +151,43 @@ public sealed class AmberDashboardService
         var summary = EnergyAccounting.Summarise(intervals);
         return new AmberDashboardSnapshot(
             siteId, network, intervalMinutes, currentImport, currentExport, summary,
-            intervals.Count, summary.PricedImportIntervals, summary.PricedExportIntervals, billableCount, estimatedCount, exportPriceBands);
+            intervals.Count, summary.PricedImportIntervals, summary.PricedExportIntervals, billableCount, estimatedCount, exportPriceBands,
+            nextSlot.Import, nextSlot.Export, nextSlot.Start);
+    }
+
+    private static (decimal? Import, decimal? Export, DateTimeOffset? Start) FindNextForecastPrices(JsonElement prices, DateTimeOffset now)
+    {
+        if (prices.ValueKind != JsonValueKind.Array) return (null, null, null);
+        var future = prices.EnumerateArray()
+            .Where(x => string.Equals(GetString(x, "type"), "ForecastInterval", StringComparison.OrdinalIgnoreCase))
+            .Select(x => new
+            {
+                Channel = GetString(x, "channelType"),
+                Start = GetDateTimeOffset(x, "startTime"),
+                Price = GetPredictedPrice(x)
+            })
+            .Where(x => x.Start > now && x.Price.HasValue &&
+                (string.Equals(x.Channel, "general", StringComparison.OrdinalIgnoreCase) ||
+                 string.Equals(x.Channel, "feedIn", StringComparison.OrdinalIgnoreCase)))
+            .ToList();
+        var nextStart = future.Select(x => x.Start!.Value).DefaultIfEmpty().Min();
+        if (nextStart == default) return (null, null, null);
+        var slot = future.Where(x => x.Start!.Value == nextStart).ToList();
+        return (
+            slot.FirstOrDefault(x => string.Equals(x.Channel, "general", StringComparison.OrdinalIgnoreCase))?.Price,
+            slot.FirstOrDefault(x => string.Equals(x.Channel, "feedIn", StringComparison.OrdinalIgnoreCase))?.Price,
+            nextStart);
+    }
+
+    private static decimal? GetPredictedPrice(JsonElement price)
+    {
+        if (price.TryGetProperty("advancedPrice", out var advanced) &&
+            advanced.ValueKind == JsonValueKind.Object &&
+            advanced.TryGetProperty("predicted", out var predicted) &&
+            predicted.TryGetDecimal(out var value))
+            return value;
+        return price.TryGetProperty("perKwh", out var perKwh) && perKwh.TryGetDecimal(out var cents)
+            ? cents : null;
     }
 
     private static IReadOnlyList<ExportPriceBand> BuildExportPriceBands(JsonElement prices)
