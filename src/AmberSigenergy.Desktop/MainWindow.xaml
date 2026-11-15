@@ -22,8 +22,8 @@
         </DockPanel>
 
         <UniformGrid Grid.Row="1" Columns="4" Margin="0,0,0,10">
-            <Border Background="{StaticResource PanelBrush}" CornerRadius="12" Padding="18" Margin="0,0,10,0">
-                <StackPanel><TextBlock Text="IMPORT PRICE" Foreground="{StaticResource MutedBrush}" FontSize="11" FontWeight="Bold"/><TextBlock x:Name="ImportPriceText" Text="—" FontSize="30" FontWeight="SemiBold" Margin="0,8,0,2"/><TextBlock Text="c/kWh · Amber general" Foreground="{StaticResource MutedBrush}" FontSize="11"/></StackPanel>
+            <Border Background="{StaticResource PanelBrush}" CornerRadius="12" Padding="12" Margin="0,0,10,0">
+                <StackPanel><TextBlock Text="IMPORT PRICE" Foreground="{StaticResource MutedBrush}" FontSize="11" FontWeight="Bold"/><TextBlock x:Name="ImportPriceText" Text="—" FontSize="27" FontWeight="SemiBold" Margin="0,4,0,1"/><TextBlock Text="c/kWh · Amber general" Foreground="{StaticResource MutedBrush}" FontSize="11"/></StackPanel>
             </Border>
             <Border Background="{StaticResource PanelBrush}" CornerRadius="12" Padding="18" Margin="0,0,10,0">
                 <StackPanel><TextBlock Text="EXPORT PRICE" Foreground="{StaticResource MutedBrush}" FontSize="11" FontWeight="Bold"/><TextBlock x:Name="ExportPriceText" Text="—" FontSize="30" FontWeight="SemiBold" Margin="0,8,0,2"/><TextBlock Text="c/kWh · Amber feed-in" Foreground="{StaticResource MutedBrush}" FontSize="11"/></StackPanel>
@@ -31,7 +31,7 @@
             <Border Background="{StaticResource PanelBrush}" CornerRadius="12" Padding="18" Margin="0,0,10,0">
                 <StackPanel><TextBlock Text="EARNED TODAY" Foreground="{StaticResource MutedBrush}" FontSize="11" FontWeight="Bold"/><TextBlock x:Name="EarnedTodayText" Text="—" FontSize="30" FontWeight="SemiBold" Margin="0,8,0,2"/><TextBlock Text="Gross export credit estimate" Foreground="{StaticResource MutedBrush}" FontSize="11"/></StackPanel>
             </Border>
-            <Border Background="{StaticResource PanelBrush}" CornerRadius="12" Padding="18">
+            <Border Background="{StaticResource PanelBrush}" CornerRadius="12" Padding="12">
                 <StackPanel><TextBlock Text="IMPORT COST TODAY" Foreground="{StaticResource MutedBrush}" FontSize="11" FontWeight="Bold"/><TextBlock x:Name="ImportCostTodayText" Text="—" FontSize="30" FontWeight="SemiBold" Margin="0,8,0,2"/><TextBlock Text="Gross usage cost estimate" Foreground="{StaticResource MutedBrush}" FontSize="11"/></StackPanel>
             </Border>
         </UniformGrid>
@@ -42,9 +42,9 @@
                 <StackPanel>
                     <TextBlock Text="LIVE ENERGY FLOW" FontSize="15" FontWeight="SemiBold"/>
                     <TextBlock Text="Live inverter readings · read-only Modbus TCP." Foreground="{StaticResource MutedBrush}" Margin="0,4,0,8" FontSize="11"/>
-                    <Grid Height="220">
+                    <Grid Height="176">
                         <Grid.ColumnDefinitions><ColumnDefinition Width="1*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="1.2*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="1*"/></Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions><RowDefinition/><RowDefinition/></Grid.RowDefinitions>
+                        <Grid.RowDefinitions><RowDefinition Height="0.8*"/><RowDefinition Height="1.2*"/></Grid.RowDefinitions>
                         <Border Grid.Column="0" Grid.Row="0" Background="#30291F" CornerRadius="12" Padding="12" Margin="0,4,6,4">
                             <StackPanel VerticalAlignment="Center">
                                 <TextBlock Text="☀  SOLAR" Foreground="#E5B04C" FontWeight="Bold" FontSize="12"/>
@@ -113,10 +113,10 @@
             <Border Grid.Column="0" Background="{StaticResource PanelBrush}" CornerRadius="14" Padding="12" Margin="0,0,10,0">
                 <StackPanel>
                     <TextBlock Text="SIGENERGY DAILY ENERGY" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,3"/>
-                    <TextBlock Text="Inverter-side totals · estimates where noted" Foreground="{StaticResource MutedBrush}" FontSize="11" Margin="0,0,0,7"/>
+                    <TextBlock Text="Modbus counters + live power integration" Foreground="{StaticResource MutedBrush}" FontSize="11" Margin="0,0,0,7"/>
                     
                     <Grid Margin="0,0,0,7"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Solar generated" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="SigDailySolarText" Grid.Column="1" Text="— kWh"/></Grid>
-                    <Grid Margin="0,0,0,7"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Home load" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="SigDailyLoadText" Grid.Column="1" Text="— kWh"/></Grid>
+                    <Grid Margin="0,0,0,7"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Home load · estimated" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="SigDailyLoadText" Grid.Column="1" Text="— kWh"/></Grid>
                     <Grid Margin="0,0,0,7"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Battery charged" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="SigDailyChargeText" Grid.Column="1" Text="— kWh"/></Grid>
                     <Grid Margin="0,0,0,7"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Battery discharged" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="SigDailyDischargeText" Grid.Column="1" Text="— kWh"/></Grid>
                     <TextBlock x:Name="SigDailyStatusText" Text="Reading native inverter daily counters where available." Foreground="{StaticResource MutedBrush}" FontSize="11" TextWrapping="Wrap" Margin="0,7,0,0"/>
@@ -129,7 +129,7 @@
                         <TextBlock Text="AMBER FEED-IN PRICE · 30-MIN BLOCKS" FontSize="14" FontWeight="SemiBold"/>
                         <TextBlock DockPanel.Dock="Right" Text="c/kWh · low / forecast / high" Foreground="{StaticResource MutedBrush}" FontSize="10"/>
                     </DockPanel>
-                    <Canvas x:Name="FeedInChartCanvas" Grid.Row="1" ClipToBounds="True" SizeChanged="FeedInChartCanvas_SizeChanged"/>
+                    <Canvas x:Name="FeedInChartCanvas" Grid.Row="1" ClipToBounds="True" SizeChanged="FeedInChartCanvas_SizeChanged" MouseMove="FeedInChartCanvas_MouseMove" MouseLeave="FeedInChartCanvas_MouseLeave"/>
                 </Grid>
             </Border>
         </Grid>
