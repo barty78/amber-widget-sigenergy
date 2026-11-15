@@ -32,6 +32,20 @@ public sealed class SigenergyModbusClient
         // Plant registers 30005..30038: grid, SOC, plant, PV and ESS power.
         var block = await ReadRegistersAsync(stream, 30005, 34, cancellationToken);
         var capacity = await ReadRegistersAsync(stream, 30083, 2, cancellationToken);
+        var dailyCharge = await ReadRegistersAsync(stream, 30566, 2, cancellationToken);
+        var dailyDischarge = await ReadRegistersAsync(stream, 30572, 2, cancellationToken);
+        double? dailyPvKwh = null;
+        try
+        {
+            // Empirically observed plant daily PV counter; not listed in public V2.5 map.
+            var pvDaily = await ReadRegistersAsync(stream, 30272, 2, cancellationToken);
+            var value = ToUInt32(pvDaily, 0) / 100d;
+            if (value is >= 0 and < 1000) dailyPvKwh = value;
+        }
+        catch (IOException)
+        {
+            // Keep the rest of the telemetry available if this undocumented counter is absent.
+        }
 
         var gridPower = ToInt32(block, 0) / 1000d;
         var soc = block[9] / 10d;
@@ -40,7 +54,8 @@ public sealed class SigenergyModbusClient
         var batteryPower = ToInt32(block, 32) / 1000d;
         var capacityKwh = ToUInt32(capacity, 0) / 100d;
 
-        return new SigenergyTelemetry(DateTimeOffset.Now, gridPower, soc, plantPower, pvPower, batteryPower, capacityKwh);
+        return new SigenergyTelemetry(DateTimeOffset.Now, gridPower, soc, plantPower, pvPower, batteryPower, capacityKwh,
+            dailyPvKwh, ToUInt32(dailyCharge, 0) / 100d, ToUInt32(dailyDischarge, 0) / 100d);
     }
 
     private async Task<ushort[]> ReadRegistersAsync(NetworkStream stream, ushort start, ushort quantity, CancellationToken ct)
