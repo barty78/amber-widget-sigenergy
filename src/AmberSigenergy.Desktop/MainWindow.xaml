@@ -69,7 +69,7 @@
                                 <TextBlock Text="Import / export" Foreground="{StaticResource MutedBrush}" FontSize="10"/>
                             </StackPanel>
                         </Border>
-                        <Border x:Name="BatteryStatePanel" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Background="#20372F" BorderBrush="#438B69" BorderThickness="1" CornerRadius="12" Padding="12" Margin="0,4,6,4">
+                        <Border x:Name="BatteryStatePanel" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Background="#29313A" BorderBrush="#46515D" BorderThickness="1" CornerRadius="12" Padding="12" Margin="0,4,6,4">
                             <StackPanel VerticalAlignment="Center">
                                 <DockPanel>
                                     <TextBlock Text="▣  BATTERY" Foreground="#83CBA6" FontWeight="Bold" FontSize="12"/>
