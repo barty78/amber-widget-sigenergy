@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Icon="AmberSigenergy.ico" Title="Amber + Sigenergy" Height="960" Width="1180"
-        MinHeight="850" MinWidth="960"
+        MinHeight="850" MinWidth="960" WindowState="Maximized"
         Background="#15181D" WindowStartupLocation="CenterScreen" Closing="MainWindow_Closing">
     <Grid Margin="26">
         <Grid.RowDefinitions>
