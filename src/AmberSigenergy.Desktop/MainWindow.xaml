@@ -49,7 +49,7 @@
                     <TextBlock Text="LIVE ENERGY FLOW" FontSize="15" FontWeight="SemiBold"/>
                     <TextBlock Text="Live inverter readings · read-only Modbus TCP." Foreground="{StaticResource MutedBrush}" Margin="0,5,0,20" FontSize="12"/>
                     <Grid Height="245">
-                        <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
+                        <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
                             <TextBlock Text="SOLAR" Foreground="#D99A32" FontWeight="Bold" HorizontalAlignment="Center"/>
                             <TextBlock x:Name="SolarPowerText" Text="— kW" FontSize="24" Margin="0,8"/>
@@ -63,11 +63,15 @@
                         </StackPanel>
                         <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">
                             <TextBlock Text="GRID" Foreground="#82A8D8" FontWeight="Bold" HorizontalAlignment="Center"/>
-                            <TextBlock x:Name="GridPowerText" Text="— kW" FontSize="24" Margin="0,8"/>
+                            <TextBlock x:Name="GridPowerText" Text="—" FontSize="22" Margin="0,8"/>
                             <TextBlock Text="Import / export" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
                         </StackPanel>
+                        <StackPanel Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock Text="HOME LOAD" Foreground="#D99A32" FontWeight="Bold" HorizontalAlignment="Center"/>
+                            <TextBlock x:Name="HomeLoadText" Text="—" FontSize="22" Margin="0,8"/>
+                            <TextBlock Text="Estimated live usage" Foreground="{StaticResource MutedBrush}" FontSize="11" TextAlignment="Center"/>
+                        </StackPanel>
                     </Grid>
-                    <TextBlock x:Name="HomeLoadText" Text="LIVE HOME LOAD — kW" Foreground="#D99A32" FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,8,0,0"/>
                     <Border Background="#292F38" CornerRadius="8" Padding="12" Margin="0,14,0,0">
                         <TextBlock x:Name="TelemetryStatusText" Text="Read-only monitoring · waiting for connection" Foreground="{StaticResource MutedBrush}" FontSize="11" TextAlignment="Center"/>
                     </Border>
