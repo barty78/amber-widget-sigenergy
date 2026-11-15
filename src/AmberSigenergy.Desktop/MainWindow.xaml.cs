@@ -387,7 +387,7 @@ public partial class MainWindow : Window
         _chartHoverLine.X2 = x;
         _chartHoverLine.Visibility = Visibility.Visible;
         if (_chartHoverCard is null || _chartHoverText is null) return;
-        _chartHoverText.Text = $"{nearest.BlockStart.ToLocalTime():ddd h:mm tt} · {nearest.Source}\\nLow  {nearest.LowCents:0.0#} c/kWh\\nForecast  {nearest.MidCents:0.0#} c/kWh\\nHigh  {nearest.HighCents:0.0#} c/kWh";
+        _chartHoverText.Text = $"{nearest.BlockStart.ToLocalTime():ddd h:mm tt} · {nearest.Source}\nLow  {nearest.LowCents:0.0#} c/kWh\nForecast  {nearest.MidCents:0.0#} c/kWh\nHigh  {nearest.HighCents:0.0#} c/kWh";
         _chartHoverCard.Visibility = Visibility.Visible;
         _chartHoverCard.Measure(new Size(270, 160));
         var cardWidth = _chartHoverCard.DesiredSize.Width;
