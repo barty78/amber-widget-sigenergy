@@ -14,13 +14,15 @@ public sealed class SigenergyModbusClient
     private readonly string _host;
     private readonly int _port;
     private readonly byte _unitId;
+    private readonly byte _inverterUnitId;
     private ushort _transactionId;
 
-    public SigenergyModbusClient(string host, int port = 502, byte unitId = 247)
+    public SigenergyModbusClient(string host, int port = 502, byte unitId = 247, byte inverterUnitId = 1)
     {
         _host = host;
         _port = port;
         _unitId = unitId;
+        _inverterUnitId = inverterUnitId;
     }
 
     public async Task<SigenergyTelemetry> ReadPlantTelemetryAsync(CancellationToken cancellationToken = default)
@@ -37,7 +39,7 @@ public sealed class SigenergyModbusClient
         try
         {
             // Battery daily counters are inverter-level registers (unit ID 1 by default).
-            var dailyCharge = await ReadRegistersAsync(stream, 30566, 2, cancellationToken, unitId: 1);
+            var dailyCharge = await ReadRegistersAsync(stream, 30566, 2, cancellationToken, unitId: _inverterUnitId);
             var dailyDischarge = await ReadRegistersAsync(stream, 30572, 2, cancellationToken, unitId: 1);
             dailyChargeKwh = ToUInt32(dailyCharge, 0) / 100d;
             dailyDischargeKwh = ToUInt32(dailyDischarge, 0) / 100d;
