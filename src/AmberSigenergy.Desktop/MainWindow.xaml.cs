@@ -37,6 +37,12 @@ public partial class MainWindow : Window
     private DateTimeOffset _lastAmberRefresh = DateTimeOffset.MinValue;
     private bool _polling;
     private bool _allowExit;
+    private IReadOnlyList<ExportPriceBand> _chartPoints = Array.Empty<ExportPriceBand>();
+    private DateTime _chartDay;
+    private double _chartLeft, _chartTop, _chartWidth, _chartHeight;
+    private decimal _chartMin, _chartMax;
+    private Line? _chartNowLine;
+    private Line? _chartHoverLine;
 
     public MainWindow()
     {
@@ -296,49 +302,94 @@ public partial class MainWindow : Window
     {
         if (FeedInChartCanvas is null || FeedInChartCanvas.ActualWidth < 100 || FeedInChartCanvas.ActualHeight < 70) return;
         FeedInChartCanvas.Children.Clear();
-        var points = _amberSnapshot?.ExportPriceBands;
-        if (points is null || points.Count == 0)
+        _chartPoints = _amberSnapshot?.ExportPriceBands ?? Array.Empty<ExportPriceBand>();
+        if (_chartPoints.Count == 0)
         {
             AddChartText("No Amber feed-in price intervals returned for today.", 8, 12, "#9BA4B0", 11);
             return;
         }
 
-        var minValue = points.Min(p => p.LowCents);
-        var maxValue = points.Max(p => p.HighCents);
-        if (maxValue - minValue < 1m) { minValue -= 1m; maxValue += 1m; }
-        var left = 42d; var right = 12d; var top = 8d; var bottom = 25d;
-        var width = FeedInChartCanvas.ActualWidth - left - right;
-        var height = FeedInChartCanvas.ActualHeight - top - bottom;
-        if (width <= 0 || height <= 0) return;
+        _chartDay = _chartPoints[0].BlockStart.ToLocalTime().Date;
+        _chartMin = _chartPoints.Min(p => p.LowCents);
+        _chartMax = _chartPoints.Max(p => p.HighCents);
+        if (_chartMax - _chartMin < 1m) { _chartMin -= 1m; _chartMax += 1m; }
+        _chartLeft = 44d; _chartTop = 12d;
+        var right = 14d; var bottom = 26d;
+        _chartWidth = FeedInChartCanvas.ActualWidth - _chartLeft - right;
+        _chartHeight = FeedInChartCanvas.ActualHeight - _chartTop - bottom;
+        if (_chartWidth <= 0 || _chartHeight <= 0) return;
 
-        double Y(decimal value) => top + (double)(maxValue - value) / (double)(maxValue - minValue) * height;
-        double X(int index) => left + (points.Count == 1 ? width / 2 : index * width / (points.Count - 1));
+        double Y(decimal value) => _chartTop + (double)(_chartMax - value) / (double)(_chartMax - _chartMin) * _chartHeight;
+        double X(DateTimeOffset block) => _chartLeft + Math.Clamp((block.ToLocalTime().DateTime - _chartDay).TotalMinutes / 1440d, 0, 1) * _chartWidth;
 
         for (var i = 0; i <= 2; i++)
         {
-            var value = maxValue - (maxValue - minValue) * i / 2m;
+            var value = _chartMax - (_chartMax - _chartMin) * i / 2m;
             var y = Y(value);
-            FeedInChartCanvas.Children.Add(new Line { X1 = left, X2 = left + width, Y1 = y, Y2 = y, Stroke = new SolidColorBrush(Color.FromRgb(58, 65, 75)), StrokeThickness = 1 });
-            AddChartText($"{value:0.#}", 2, y - 8, "#9BA4B0", 9);
+            FeedInChartCanvas.Children.Add(new Line { X1 = _chartLeft, X2 = _chartLeft + _chartWidth, Y1 = y, Y2 = y, Stroke = new SolidColorBrush(Color.FromRgb(58, 65, 75)), StrokeThickness = 1 });
+            AddChartText($"{value:0.#}", 2, y - 8, "#9BA4B0", 10);
         }
 
         var line = new Polyline { Stroke = new SolidColorBrush(Color.FromRgb(217, 154, 50)), StrokeThickness = 2 };
-        for (var i = 0; i < points.Count; i++)
+        foreach (var p in _chartPoints)
         {
-            var p = points[i];
-            var x = X(i);
+            var x = X(p.BlockStart);
             FeedInChartCanvas.Children.Add(new Line { X1 = x, X2 = x, Y1 = Y(p.HighCents), Y2 = Y(p.LowCents), Stroke = new SolidColorBrush(Color.FromRgb(112, 184, 162)), StrokeThickness = 3, Opacity = 0.85 });
             line.Points.Add(new System.Windows.Point(x, Y(p.MidCents)));
-            if (i % Math.Max(1, points.Count / 6) == 0 || i == points.Count - 1)
-                AddChartText(p.BlockStart.ToLocalTime().ToString("HH:mm"), x - 16, top + height + 5, "#9BA4B0", 9);
         }
         FeedInChartCanvas.Children.Add(line);
-        for (var i = 0; i < points.Count; i++)
+
+        for (var hour = 0; hour <= 24; hour += 4)
         {
-            var dot = new System.Windows.Shapes.Ellipse { Width = 4, Height = 4, Fill = new SolidColorBrush(Color.FromRgb(217, 154, 50)) };
-            Canvas.SetLeft(dot, X(i) - 2); Canvas.SetTop(dot, Y(points[i].MidCents) - 2);
-            FeedInChartCanvas.Children.Add(dot);
+            var x = _chartLeft + hour / 24d * _chartWidth;
+            AddChartText(hour == 24 ? "24:00" : $"{hour:00}:00", x - 16, _chartTop + _chartHeight + 5, "#AAB4C0", 10);
         }
+
+        var now = DateTime.Now;
+        if (now.Date == _chartDay)
+        {
+            var nowX = _chartLeft + now.TimeOfDay.TotalMinutes / 1440d * _chartWidth;
+            _chartNowLine = new Line
+            {
+                X1 = nowX, X2 = nowX, Y1 = _chartTop, Y2 = _chartTop + _chartHeight,
+                Stroke = new SolidColorBrush(Color.FromRgb(244, 244, 244)),
+                StrokeThickness = 1.5, StrokeDashArray = new DoubleCollection { 3, 2 },
+                IsHitTestVisible = false
+            };
+            FeedInChartCanvas.Children.Add(_chartNowLine);
+            AddChartText("NOW", Math.Min(nowX + 4, _chartLeft + _chartWidth - 34), _chartTop + 2, "#FFFFFF", 9);
+        }
+        _chartHoverLine = new Line
+        {
+            Y1 = _chartTop, Y2 = _chartTop + _chartHeight,
+            Stroke = new SolidColorBrush(Color.FromRgb(255, 255, 255)),
+            StrokeThickness = 1, Opacity = 0.65, Visibility = Visibility.Collapsed,
+            IsHitTestVisible = false
+        };
+        FeedInChartCanvas.Children.Add(_chartHoverLine);
+        FeedInChartCanvas.ToolTip = "Move over the chart to inspect a 30-minute price interval";
+    }
+
+    private void FeedInChartCanvas_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        if (_chartPoints.Count == 0 || _chartWidth <= 0 || _chartHoverLine is null) return;
+        var position = e.GetPosition(FeedInChartCanvas);
+        if (position.X < _chartLeft || position.X > _chartLeft + _chartWidth) return;
+        var minutes = Math.Clamp((position.X - _chartLeft) / _chartWidth * 1440d, 0, 1439.9);
+        var target = _chartDay.AddMinutes(minutes);
+        var nearest = _chartPoints.OrderBy(p => Math.Abs((p.BlockStart.ToLocalTime().DateTime - target).TotalMinutes)).First();
+        var x = _chartLeft + (nearest.BlockStart.ToLocalTime().DateTime - _chartDay).TotalMinutes / 1440d * _chartWidth;
+        _chartHoverLine.X1 = x;
+        _chartHoverLine.X2 = x;
+        _chartHoverLine.Visibility = Visibility.Visible;
+        FeedInChartCanvas.ToolTip = $"{nearest.BlockStart.ToLocalTime():ddd h:mm tt} · {nearest.Source}\nLow {nearest.LowCents:0.0#} c/kWh  |  Forecast {nearest.MidCents:0.0#} c/kWh  |  High {nearest.HighCents:0.0#} c/kWh";
+        FeedInChartCanvas.ToolTipIsOpen = true;
+    }
+
+    private void FeedInChartCanvas_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        if (_chartHoverLine is not null) _chartHoverLine.Visibility = Visibility.Collapsed;
+        FeedInChartCanvas.ToolTipIsOpen = false;
     }
 
     private void AddChartText(string text, double left, double top, string colour, double size)
