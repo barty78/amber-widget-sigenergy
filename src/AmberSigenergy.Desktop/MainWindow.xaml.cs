@@ -15,6 +15,7 @@ using MessageBoxButton = System.Windows.MessageBoxButton;
 using MessageBoxImage = System.Windows.MessageBoxImage;
 using RoutedEventArgs = System.Windows.RoutedEventArgs;
 using SizeChangedEventArgs = System.Windows.SizeChangedEventArgs;
+using WindowState = System.Windows.WindowState;
 using AmberSigenergy.Desktop.Models;
 using AmberSigenergy.Desktop.Services;
 
@@ -226,6 +227,8 @@ public partial class MainWindow : Window
         SigDailyExportText.Text = $"{totals.ExportedKwh:0.00} kWh";
         SigDailySolarText.Text = $"{totals.SolarGeneratedKwh:0.00} kWh";
         SigDailyLoadText.Text = $"{totals.HomeLoadKwh:0.00} kWh";
+        SigDailyChargeText.Text = $"{totals.BatteryChargedKwh:0.00} kWh";
+        SigDailyDischargeText.Text = $"{totals.BatteryDischargedKwh:0.00} kWh";
         SigDailyStatusText.Text = $"{totals.Samples:N0} live samples today · accumulated while this app is running";
     }
 
