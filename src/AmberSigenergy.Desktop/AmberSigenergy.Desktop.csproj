@@ -8,8 +8,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>AmberSigenergy.Desktop</RootNamespace>
     <AssemblyName>AmberSigenergy</AssemblyName>
+    <ApplicationIcon>AmberSigenergy.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="AmberSigenergy.ico" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../appsettings.example.json" Link="appsettings.example.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>
