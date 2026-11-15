@@ -12,7 +12,7 @@
             <RowDefinition Height="0.85*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <DockPanel Grid.Row="0" Margin="0,0,0,10">
+        <DockPanel Grid.Row="0" Margin="0,0,0,10" LastChildFill="False">
             <StackPanel DockPanel.Dock="Left">
                 <TextBlock Text="ENERGY CONTROL" Foreground="#D99A32" FontSize="11" FontWeight="Bold" />
                 <TextBlock Text="Amber + Sigenergy" FontSize="30" FontWeight="SemiBold" Margin="0,3,0,0"/>
@@ -42,14 +42,14 @@
                 <StackPanel>
                     <TextBlock Text="LIVE ENERGY FLOW" FontSize="15" FontWeight="SemiBold"/>
                     <TextBlock Text="Live inverter readings · read-only Modbus TCP." Foreground="{StaticResource MutedBrush}" Margin="0,4,0,8" FontSize="11"/>
-                    <Grid Height="190">
+                    <Grid Height="220">
                         <Grid.ColumnDefinitions><ColumnDefinition Width="1*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="1.2*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="1*"/></Grid.ColumnDefinitions>
                         <Grid.RowDefinitions><RowDefinition/><RowDefinition/></Grid.RowDefinitions>
                         <Border Grid.Column="0" Grid.Row="0" Background="#30291F" CornerRadius="12" Padding="12" Margin="0,4,6,4">
                             <StackPanel VerticalAlignment="Center">
                                 <TextBlock Text="☀  SOLAR" Foreground="#E5B04C" FontWeight="Bold" FontSize="12"/>
                                 <TextBlock x:Name="SolarPowerText" Text="— kW" FontSize="25" FontWeight="SemiBold" Margin="0,6,0,0"/>
-                                <TextBlock Text="PV generation" Foreground="{StaticResource MutedBrush}" FontSize="10"/>
+                                <TextBlock Text="PV generation" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
                             </StackPanel>
                         </Border>
                         <TextBlock Grid.Column="1" Grid.Row="0" Text="→" Foreground="#E5B04C" FontSize="22" VerticalAlignment="Center" Margin="0,0,5,0"/>
@@ -57,8 +57,8 @@
                             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                                 <TextBlock Text="⌂  HOME" Foreground="#D8E0E8" FontWeight="Bold" FontSize="13"/>
                                 <TextBlock x:Name="HomeLoadText" Text="—" FontSize="30" FontWeight="SemiBold" Margin="0,9"/>
-                                <TextBlock Text="LIVE LOAD" Foreground="{StaticResource MutedBrush}" FontSize="10"/>
-                                <TextBlock Text="Estimated from power balance" Foreground="{StaticResource MutedBrush}" FontSize="9" TextWrapping="Wrap" TextAlignment="Center" Margin="0,5,0,0"/>
+                                <TextBlock Text="LIVE LOAD" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
+                                <TextBlock Text="Estimated from power balance" Foreground="{StaticResource MutedBrush}" FontSize="11" TextWrapping="Wrap" TextAlignment="Center" Margin="0,5,0,0"/>
                             </StackPanel>
                         </Border>
                         <TextBlock Grid.Column="3" Grid.Row="0" Text="⇄" Foreground="#82A8D8" FontSize="22" VerticalAlignment="Center" Margin="5,0"/>
@@ -66,7 +66,7 @@
                             <StackPanel VerticalAlignment="Center">
                                 <TextBlock Text="↔  GRID" Foreground="#8FB8EE" FontWeight="Bold" FontSize="12"/>
                                 <TextBlock x:Name="GridPowerText" Text="—" FontSize="25" FontWeight="SemiBold" Margin="0,6,0,0"/>
-                                <TextBlock Text="Import / export" Foreground="{StaticResource MutedBrush}" FontSize="10"/>
+                                <TextBlock Text="Import / export" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
                             </StackPanel>
                         </Border>
                         <Border x:Name="BatteryStatePanel" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Background="#29313A" BorderBrush="#46515D" BorderThickness="1" CornerRadius="12" Padding="12" Margin="0,4,6,4">
@@ -79,13 +79,13 @@
                                     <TextBlock x:Name="BatterySocText" Text="— %" FontSize="25" FontWeight="SemiBold"/>
                                     <TextBlock x:Name="BatteryPowerText" Text="— kW" FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                 </DockPanel>
-                                <TextBlock x:Name="BatteryEnergyText" Text="— / 40 kWh" Foreground="{StaticResource MutedBrush}" FontSize="10" Margin="0,2,0,5"/>
+                                <TextBlock x:Name="BatteryEnergyText" Text="— / 40 kWh" Foreground="{StaticResource MutedBrush}" FontSize="11" Margin="0,2,0,5"/>
                                 <Border Background="#3A4652" CornerRadius="4" Height="6" Width="150" HorizontalAlignment="Left" ClipToBounds="True">
                                     <Border x:Name="BatterySocBar" Background="#70B8A2" Height="6" Width="0" HorizontalAlignment="Left" CornerRadius="4"/>
                                 </Border>
                             </StackPanel>
                         </Border>
-                        <TextBlock Grid.Column="3" Grid.ColumnSpan="2" Grid.Row="1" Text="Battery ↔ Home" Foreground="{StaticResource MutedBrush}" FontSize="11" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <TextBlock Grid.Column="3" Grid.ColumnSpan="2" Grid.Row="1" Text="Battery ↔ Home" Foreground="{StaticResource MutedBrush}" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                     </Grid>
                     <Border Background="#292F38" CornerRadius="8" Padding="12" Margin="0,14,0,0">
                         <TextBlock x:Name="TelemetryStatusText" Text="Read-only monitoring · waiting for connection" Foreground="{StaticResource MutedBrush}" FontSize="11" TextAlignment="Center"/>
@@ -101,8 +101,8 @@
                         
                         <Separator Background="#3A414B" Margin="0,8"/>
                         <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Net energy value" FontWeight="SemiBold"/><TextBlock x:Name="NetEnergyValueText" Grid.Column="1" Text="—" FontWeight="SemiBold"/></Grid>
-                        <TextBlock Text="Excludes daily supply charges, subscription and other bill adjustments." Foreground="{StaticResource MutedBrush}" FontSize="10" TextWrapping="Wrap" Margin="0,10,0,0"/>
-                        <TextBlock x:Name="AmberStatusText" Text="Amber usage and price intervals will appear here." Foreground="{StaticResource MutedBrush}" FontSize="10" TextWrapping="Wrap" Margin="0,7,0,0"/>
+                        <TextBlock Text="Excludes daily supply charges, subscription and other bill adjustments." Foreground="{StaticResource MutedBrush}" FontSize="11" TextWrapping="Wrap" Margin="0,10,0,0"/>
+                        <TextBlock x:Name="AmberStatusText" Text="Amber usage and price intervals will appear here." Foreground="{StaticResource MutedBrush}" FontSize="11" TextWrapping="Wrap" Margin="0,7,0,0"/>
                     </StackPanel>
                 </Border>
                 
@@ -113,13 +113,13 @@
             <Border Grid.Column="0" Background="{StaticResource PanelBrush}" CornerRadius="14" Padding="12" Margin="0,0,10,0">
                 <StackPanel>
                     <TextBlock Text="SIGENERGY DAILY ENERGY" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,3"/>
-                    <TextBlock Text="Inverter-side totals · estimates where noted" Foreground="{StaticResource MutedBrush}" FontSize="9" Margin="0,0,0,5"/>
+                    <TextBlock Text="Inverter-side totals · estimates where noted" Foreground="{StaticResource MutedBrush}" FontSize="11" Margin="0,0,0,7"/>
                     
                     <Grid Margin="0,0,0,7"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Solar generated" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="SigDailySolarText" Grid.Column="1" Text="— kWh"/></Grid>
                     <Grid Margin="0,0,0,7"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Home load" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="SigDailyLoadText" Grid.Column="1" Text="— kWh"/></Grid>
                     <Grid Margin="0,0,0,7"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Battery charged" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="SigDailyChargeText" Grid.Column="1" Text="— kWh"/></Grid>
                     <Grid Margin="0,0,0,7"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Battery discharged" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="SigDailyDischargeText" Grid.Column="1" Text="— kWh"/></Grid>
-                    <TextBlock x:Name="SigDailyStatusText" Text="Reading native inverter daily counters where available." Foreground="{StaticResource MutedBrush}" FontSize="10" TextWrapping="Wrap" Margin="0,5,0,0"/>
+                    <TextBlock x:Name="SigDailyStatusText" Text="Reading native inverter daily counters where available." Foreground="{StaticResource MutedBrush}" FontSize="11" TextWrapping="Wrap" Margin="0,7,0,0"/>
                 </StackPanel>
             </Border>
             <Border Grid.Column="1" Background="{StaticResource PanelBrush}" CornerRadius="14" Padding="12">
@@ -133,6 +133,6 @@
                 </Grid>
             </Border>
         </Grid>
-        <TextBlock Grid.Row="4" Text="Daily battery charge/discharge use native Modbus counters. Grid import/export are integrated from live CT power; PV daily generation uses an undocumented plant counter when available. All monitoring is read-only." Foreground="{StaticResource MutedBrush}" FontSize="10" Margin="2,6,0,0" TextWrapping="Wrap"/>
+        <TextBlock Grid.Row="4" Text="Daily battery charge/discharge use native Modbus counters. Grid import/export are integrated from live CT power; PV daily generation uses an undocumented plant counter when available. All monitoring is read-only." Foreground="{StaticResource MutedBrush}" FontSize="11" Margin="2,6,0,0" TextWrapping="Wrap"/>
     </Grid>
 </Window>
