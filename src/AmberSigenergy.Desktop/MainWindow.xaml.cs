@@ -7,7 +7,6 @@ using Forms = System.Windows.Forms;
 using Application = System.Windows.Application;
 using Window = System.Windows.Window;
 using Color = System.Windows.Media.Color;
-using ColorConverter = System.Windows.Media.ColorConverter;
 using Canvas = System.Windows.Controls.Canvas;
 using TextBlock = System.Windows.Controls.TextBlock;
 using MessageBox = System.Windows.MessageBox;
@@ -288,7 +287,10 @@ public partial class MainWindow : Window
         var label = new System.Windows.Controls.TextBlock
         {
             Text = text,
-            Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(colour)),
+            Foreground = new SolidColorBrush(Color.FromRgb(
+                (byte)(System.Convert.ToInt32(colour.TrimStart('#'), 16) >> 16),
+                (byte)(System.Convert.ToInt32(colour.TrimStart('#'), 16) >> 8),
+                (byte)System.Convert.ToInt32(colour.TrimStart('#'), 16))),
             FontSize = size
         };
         Canvas.SetLeft(label, left); Canvas.SetTop(label, top);
