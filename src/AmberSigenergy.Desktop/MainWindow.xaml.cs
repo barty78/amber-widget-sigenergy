@@ -338,7 +338,7 @@ public partial class MainWindow : Window
     private void ShowDashboard()
     {
         Show();
-        this.WindowState = System.Windows.WindowState.Normal;
+        this.WindowState = System.Windows.WindowState.Maximized;
         Activate();
     }
 
