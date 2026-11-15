@@ -43,6 +43,8 @@ public partial class MainWindow : Window
     private decimal _chartMin, _chartMax;
     private Line? _chartNowLine;
     private Line? _chartHoverLine;
+    private Border? _chartHoverCard;
+    private TextBlock? _chartHoverText;
 
     public MainWindow()
     {
@@ -367,7 +369,9 @@ public partial class MainWindow : Window
             IsHitTestVisible = false
         };
         FeedInChartCanvas.Children.Add(_chartHoverLine);
-        FeedInChartCanvas.ToolTip = "Move over the chart to inspect a 30-minute price interval";
+        _chartHoverText = new TextBlock { Foreground = Brushes.White, FontSize = 12, TextWrapping = TextWrapping.Wrap, MaxWidth = 250 };
+        _chartHoverCard = new Border { Background = new SolidColorBrush(Color.FromRgb(35, 42, 51)), BorderBrush = new SolidColorBrush(Color.FromRgb(100, 116, 132)), BorderThickness = new Thickness(1), CornerRadius = new CornerRadius(7), Padding = new Thickness(10), Child = _chartHoverText, Visibility = Visibility.Collapsed, IsHitTestVisible = false };
+        FeedInChartCanvas.Children.Add(_chartHoverCard);
     }
 
     private void FeedInChartCanvas_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
@@ -382,12 +386,22 @@ public partial class MainWindow : Window
         _chartHoverLine.X1 = x;
         _chartHoverLine.X2 = x;
         _chartHoverLine.Visibility = Visibility.Visible;
-        FeedInChartCanvas.ToolTip = $"{nearest.BlockStart.ToLocalTime():ddd h:mm tt} · {nearest.Source}\nLow {nearest.LowCents:0.0#} c/kWh  |  Forecast {nearest.MidCents:0.0#} c/kWh  |  High {nearest.HighCents:0.0#} c/kWh";
+        if (_chartHoverCard is null || _chartHoverText is null) return;
+        _chartHoverText.Text = $"{nearest.BlockStart.ToLocalTime():ddd h:mm tt} · {nearest.Source}\\nLow  {nearest.LowCents:0.0#} c/kWh\\nForecast  {nearest.MidCents:0.0#} c/kWh\\nHigh  {nearest.HighCents:0.0#} c/kWh";
+        _chartHoverCard.Visibility = Visibility.Visible;
+        _chartHoverCard.Measure(new Size(270, 160));
+        var cardWidth = _chartHoverCard.DesiredSize.Width;
+        var cardHeight = _chartHoverCard.DesiredSize.Height;
+        var cardLeft = position.X + 14 + cardWidth > FeedInChartCanvas.ActualWidth ? position.X - cardWidth - 14 : position.X + 14;
+        var cardTop = position.Y + 14 + cardHeight > FeedInChartCanvas.ActualHeight ? position.Y - cardHeight - 14 : position.Y + 14;
+        Canvas.SetLeft(_chartHoverCard, Math.Max(4, cardLeft));
+        Canvas.SetTop(_chartHoverCard, Math.Max(4, cardTop));
     }
 
     private void FeedInChartCanvas_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
     {
         if (_chartHoverLine is not null) _chartHoverLine.Visibility = Visibility.Collapsed;
+        if (_chartHoverCard is not null) _chartHoverCard.Visibility = Visibility.Collapsed;
     }
 
     private void AddChartText(string text, double left, double top, string colour, double size)
