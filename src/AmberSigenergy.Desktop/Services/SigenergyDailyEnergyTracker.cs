@@ -47,7 +47,7 @@ public sealed class SigenergyDailyEnergyTracker
             var solar = _nativeSolar ?? _solar;
             var charge = _nativeCharge ?? _charged;
             var discharge = _nativeDischarge ?? _discharged;
-            var home = Math.Max(0, solar - charge + discharge + _imported - _exported);
+            // Home load is integrated directly from the live Modbus power balance while the app runs.\n            // The energy-balance fallback is retained for days with no usable samples.\n            var home = _samples > 1 && _load > 0 ? _load : Math.Max(0, solar - charge + discharge + _imported - _exported);
             return new SigenergyDailyTotals(_date, _imported, _exported, solar, home, charge, discharge, _samples);
         }
     }
