@@ -1,4 +1,8 @@
-using System.Windows;
+using Window = System.Windows.Window;
+using RoutedEventArgs = System.Windows.RoutedEventArgs;
+using MessageBox = System.Windows.MessageBox;
+using MessageBoxButton = System.Windows.MessageBoxButton;
+using MessageBoxImage = System.Windows.MessageBoxImage;
 using AmberSigenergy.Desktop.Services;
 
 namespace AmberSigenergy.Desktop;
