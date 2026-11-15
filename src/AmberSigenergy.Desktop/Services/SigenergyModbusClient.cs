@@ -32,8 +32,20 @@ public sealed class SigenergyModbusClient
         // Plant registers 30005..30038: grid, SOC, plant, PV and ESS power.
         var block = await ReadRegistersAsync(stream, 30005, 34, cancellationToken);
         var capacity = await ReadRegistersAsync(stream, 30083, 2, cancellationToken);
-        var dailyCharge = await ReadRegistersAsync(stream, 30566, 2, cancellationToken);
-        var dailyDischarge = await ReadRegistersAsync(stream, 30572, 2, cancellationToken);
+        double? dailyChargeKwh = null;
+        double? dailyDischargeKwh = null;
+        try
+        {
+            // Battery daily counters are inverter-level registers (unit ID 1 by default).
+            var dailyCharge = await ReadRegistersAsync(stream, 30566, 2, cancellationToken, unitId: 1);
+            var dailyDischarge = await ReadRegistersAsync(stream, 30572, 2, cancellationToken, unitId: 1);
+            dailyChargeKwh = ToUInt32(dailyCharge, 0) / 100d;
+            dailyDischargeKwh = ToUInt32(dailyDischarge, 0) / 100d;
+        }
+        catch (IOException)
+        {
+            // Keep plant telemetry alive if the inverter-level unit ID is not reachable.
+        }
         double? dailyPvKwh = null;
         try
         {
@@ -55,10 +67,10 @@ public sealed class SigenergyModbusClient
         var capacityKwh = ToUInt32(capacity, 0) / 100d;
 
         return new SigenergyTelemetry(DateTimeOffset.Now, gridPower, soc, plantPower, pvPower, batteryPower, capacityKwh,
-            dailyPvKwh, ToUInt32(dailyCharge, 0) / 100d, ToUInt32(dailyDischarge, 0) / 100d);
+            dailyPvKwh, dailyChargeKwh, dailyDischargeKwh);
     }
 
-    private async Task<ushort[]> ReadRegistersAsync(NetworkStream stream, ushort start, ushort quantity, CancellationToken ct)
+    private async Task<ushort[]> ReadRegistersAsync(NetworkStream stream, ushort start, ushort quantity, CancellationToken ct, byte? unitId = null)
     {
         if (quantity is 0 or > 124) throw new ArgumentOutOfRangeException(nameof(quantity));
         var transaction = unchecked(++_transactionId);
@@ -66,7 +78,7 @@ public sealed class SigenergyModbusClient
         BinaryPrimitives.WriteUInt16BigEndian(request.AsSpan(0, 2), transaction);
         BinaryPrimitives.WriteUInt16BigEndian(request.AsSpan(2, 2), 0);
         BinaryPrimitives.WriteUInt16BigEndian(request.AsSpan(4, 2), 6);
-        request[6] = _unitId;
+        request[6] = unitId ?? _unitId;
         request[7] = 0x03; // FC03: read-only plant running registers
         BinaryPrimitives.WriteUInt16BigEndian(request.AsSpan(8, 2), start);
         BinaryPrimitives.WriteUInt16BigEndian(request.AsSpan(10, 2), quantity);
@@ -77,7 +89,7 @@ public sealed class SigenergyModbusClient
         var responseTransaction = BinaryPrimitives.ReadUInt16BigEndian(header.AsSpan(0, 2));
         var protocol = BinaryPrimitives.ReadUInt16BigEndian(header.AsSpan(2, 2));
         var length = BinaryPrimitives.ReadUInt16BigEndian(header.AsSpan(4, 2));
-        if (responseTransaction != transaction || protocol != 0 || header[6] != _unitId || length < 3 || length > 255)
+        if (responseTransaction != transaction || protocol != 0 || header[6] != (unitId ?? _unitId) || length < 3 || length > 255)
             throw new IOException("Invalid Modbus TCP response header.");
 
         var pdu = new byte[length - 1];
