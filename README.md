@@ -7,7 +7,10 @@ A native Windows desktop and system-tray monitor for Amber Electric and a Sigene
 - Live Amber import price (general channel) and export/feed-in price (feedIn channel), in c/kWh.
 - Today’s import cost, export earnings, net energy value, imported/exported kWh.
 - Current and forecast Amber prices, including negative prices and price spikes.
-- Sigenergy battery state of charge, stored energy (40 kWh nameplate), charge/discharge power, PV, grid import/export and home load.
+- Sigenergy battery state of charge, stored energy (40 kWh nameplate), charge/discharge power, PV, grid import/export and derived real-time home load.
+- Daily Sigenergy import/export, solar, home-load and battery charge/discharge estimates integrated from live power samples and saved locally.
+- Amber feed-in price chart grouped into 30-minute blocks, with lower/forecast/upper values when Amber supplies advanced price bands.
+- Windows system-tray operation; closing the dashboard hides it while monitoring continues.
 - Daily and lifetime energy totals, trends and a compact tray popup.
 
 ## Important accounting rules
@@ -48,10 +51,10 @@ Copy `appsettings.example.json` to a local config file (never commit secrets). C
 
 ## Roadmap
 
-1. WPF dashboard shell and tray app.
+1. WPF dashboard, tray lifecycle, daily sampled-energy history and Amber 30-minute price chart.
 2. Amber API client, site/channel discovery, price timeline and usage import/export accounting.
-3. Sigenergy Modbus read-only telemetry and power-flow diagram.
-4. Local SQLite history, earnings/cost charts and data reconciliation.
+3. Sigenergy Modbus read-only telemetry and derived real-time home load.
+4. Longer-term history, earnings/cost charts and data reconciliation.
 5. Notifications, startup-on-login, installer and signed release.
 
 ## Disclaimer
