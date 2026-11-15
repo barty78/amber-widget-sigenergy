@@ -4,12 +4,13 @@
         Icon="AmberSigenergy.ico" Title="Amber + Sigenergy" Height="960" Width="1180"
         MinHeight="850" MinWidth="960" WindowState="Maximized"
         Background="#15181D" WindowStartupLocation="CenterScreen" Closing="MainWindow_Closing">
-    <Grid Margin="26">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" CanContentScroll="False">
+      <Grid Margin="26" MinWidth="960">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="220"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <DockPanel Grid.Row="0" Margin="0,0,0,22">
@@ -42,7 +43,7 @@
             </Border>
         </UniformGrid>
 
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="2" MinHeight="360">
             <Grid.ColumnDefinitions><ColumnDefinition Width="1.25*"/><ColumnDefinition Width="0.9*"/></Grid.ColumnDefinitions>
             <Border Grid.Column="0" Background="{StaticResource PanelBrush}" CornerRadius="14" Padding="22" Margin="0,0,12,0">
                 <StackPanel>
@@ -102,7 +103,7 @@
                 </Border>
             </StackPanel>
         </Grid>
-        <Grid Grid.Row="3" Margin="0,14,0,0">
+        <Grid Grid.Row="3" Margin="0,14,0,0" MinHeight="260">
             <Grid.ColumnDefinitions><ColumnDefinition Width="0.85*"/><ColumnDefinition Width="1.5*"/></Grid.ColumnDefinitions>
             <Border Grid.Column="0" Background="{StaticResource PanelBrush}" CornerRadius="14" Padding="18" Margin="0,0,12,0">
                 <StackPanel>
@@ -128,5 +129,6 @@
             </Border>
         </Grid>
         <TextBlock Grid.Row="4" Text="Amber interval usage is the source of truth for import costs and export earnings. Sigenergy daily kWh totals are estimates integrated from live read-only power samples; they are not meter-settled values." Foreground="{StaticResource MutedBrush}" FontSize="10" Margin="2,12,0,0" TextWrapping="Wrap"/>
-    </Grid>
+      </Grid>
+    </ScrollViewer>
 </Window>
