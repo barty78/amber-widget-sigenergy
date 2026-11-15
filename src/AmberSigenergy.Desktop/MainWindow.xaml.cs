@@ -198,7 +198,7 @@ public partial class MainWindow : Window
             ? data.RatedBatteryCapacityKwh.Value
             : _settings?.BatteryCapacityKwh ?? 40d;
         if (data.PvPowerKw.HasValue)
-            SolarPowerText.Text = $"{data.PvPowerKw.Value:0.00} kW";
+            SolarPowerText.Text = FormatPower(data.PvPowerKw.Value);
         if (data.BatterySocPercent.HasValue)
         {
             var soc = Math.Clamp(data.BatterySocPercent.Value, 0, 100);
@@ -210,16 +210,24 @@ public partial class MainWindow : Window
         {
             var power = data.BatteryPowerKw.Value;
             var label = Math.Abs(power) < 0.01 ? "Idle" : power > 0 ? "Charging" : "Discharging";
-            BatteryPowerText.Text = $"{Math.Abs(power):0.00} kW";
-            BatteryPowerSummaryText.Text = $"{Math.Abs(power):0.00} kW {label.ToLowerInvariant()}";
+            BatteryPowerText.Text = FormatPower(Math.Abs(power));
+            BatteryPowerSummaryText.Text = $"{FormatPower(Math.Abs(power))} {label.ToLowerInvariant()}";
         }
         var grid = data.GridPowerKw;
-        GridPowerText.Text = $"{Math.Abs(grid):0.00} kW";
+        GridPowerText.Text = FormatPower(Math.Abs(grid));
         var flow = Math.Abs(grid) < 0.01 ? "Grid balanced" : grid > 0 ? "Grid import" : "Grid export";
-        HomeLoadText.Text = $"LIVE HOME LOAD  {_dailyTracker.GetHomeLoadKw(data):0.00} kW";
+        HomeLoadText.Text = FormatPower(_dailyTracker.GetHomeLoadKw(data));
         TelemetryStatusText.Text = $"Sigenergy read OK · {flow} · {data.ReadAt.ToLocalTime():HH:mm:ss} · read-only";
         if (_amberSnapshot is not null)
             ConnectionStatusText.Text = "Amber + Sigenergy connected";
+    }
+
+    private static string FormatPower(double powerKw)
+    {
+        var watts = Math.Abs(powerKw) * 1000d;
+        return watts >= 1000d
+            ? $"{watts / 1000d:0.00} kW"
+            : $"{watts:0} W";
     }
 
     private void UpdateDailyDashboard()
