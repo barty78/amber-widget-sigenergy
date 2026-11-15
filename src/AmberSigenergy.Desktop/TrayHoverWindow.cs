@@ -2,6 +2,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using Brushes = System.Windows.Media.Brushes;
+using Color = System.Windows.Media.Color;
 using AmberSigenergy.Desktop.Models;
 
 namespace AmberSigenergy.Desktop;
