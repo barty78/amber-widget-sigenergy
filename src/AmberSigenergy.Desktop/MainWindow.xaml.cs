@@ -258,7 +258,7 @@ public partial class MainWindow : Window
         var batteryPower = data.BatteryPowerKw ?? 0;
         var batteryState = batteryPower > 0.03 ? "CHG" : batteryPower < -0.03 ? "DIS" : "IDLE";
         _trayIcon.Text = $"Amber + Sigenergy · BAT {batteryState}";
-        _trayHoverWindow.UpdateSummary(data, _dailyTracker.GetHomeLoadKw(data));
+        _trayHoverWindow.UpdateSummary(data, _dailyTracker.GetHomeLoadKw(data), _amberSnapshot);
     }
 
     private void ShowTrayHover()
@@ -267,8 +267,8 @@ public partial class MainWindow : Window
         if (_trayHoverWindow.IsVisible) return;
         var cursor = Forms.Cursor.Position;
         var dpi = System.Windows.Media.VisualTreeHelper.GetDpi(this);
-        _trayHoverWindow.Left = Math.Max(0, cursor.X / dpi.DpiScaleX - 325);
-        _trayHoverWindow.Top = Math.Max(0, cursor.Y / dpi.DpiScaleY - 195);
+        _trayHoverWindow.Left = Math.Max(0, cursor.X / dpi.DpiScaleX - 365);
+        _trayHoverWindow.Top = Math.Max(0, cursor.Y / dpi.DpiScaleY - 320);
         _trayHoverWindow.Show();
     }
 
