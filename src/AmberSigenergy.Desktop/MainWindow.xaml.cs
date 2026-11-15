@@ -383,13 +383,11 @@ public partial class MainWindow : Window
         _chartHoverLine.X2 = x;
         _chartHoverLine.Visibility = Visibility.Visible;
         FeedInChartCanvas.ToolTip = $"{nearest.BlockStart.ToLocalTime():ddd h:mm tt} · {nearest.Source}\nLow {nearest.LowCents:0.0#} c/kWh  |  Forecast {nearest.MidCents:0.0#} c/kWh  |  High {nearest.HighCents:0.0#} c/kWh";
-        FeedInChartCanvas.ToolTipIsOpen = true;
     }
 
     private void FeedInChartCanvas_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
     {
         if (_chartHoverLine is not null) _chartHoverLine.Visibility = Visibility.Collapsed;
-        FeedInChartCanvas.ToolTipIsOpen = false;
     }
 
     private void AddChartText(string text, double left, double top, string colour, double size)
