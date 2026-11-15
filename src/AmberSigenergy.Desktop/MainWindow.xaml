@@ -9,7 +9,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="210"/>
+            <RowDefinition Height="0.85*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <DockPanel Grid.Row="0" Margin="0,0,0,10">
@@ -79,7 +79,10 @@
                                     <TextBlock x:Name="BatterySocText" Text="— %" FontSize="25" FontWeight="SemiBold"/>
                                     <TextBlock x:Name="BatteryPowerText" Text="— kW" FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                 </DockPanel>
-                                <TextBlock x:Name="BatteryEnergyText" Text="— / 40 kWh" Foreground="{StaticResource MutedBrush}" FontSize="10"/>
+                                <TextBlock x:Name="BatteryEnergyText" Text="— / 40 kWh" Foreground="{StaticResource MutedBrush}" FontSize="10" Margin="0,2,0,5"/>
+                                <Border Background="#3A4652" CornerRadius="4" Height="6" Width="150" HorizontalAlignment="Left" ClipToBounds="True">
+                                    <Border x:Name="BatterySocBar" Background="#70B8A2" Height="6" Width="0" HorizontalAlignment="Left" CornerRadius="4"/>
+                                </Border>
                             </StackPanel>
                         </Border>
                         <TextBlock Grid.Column="3" Grid.ColumnSpan="2" Grid.Row="1" Text="Battery ↔ Home" Foreground="{StaticResource MutedBrush}" FontSize="11" VerticalAlignment="Center" HorizontalAlignment="Center"/>
@@ -95,32 +98,23 @@
                         <TextBlock Text="TODAY'S ENERGY ACCOUNT" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,14"/>
                         <Grid Margin="0,0,0,9"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Grid imported" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="ImportedKwhText" Grid.Column="1" Text="— kWh"/></Grid>
                         <Grid Margin="0,0,0,9"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Grid exported" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="ExportedKwhText" Grid.Column="1" Text="— kWh"/></Grid>
-                        <Grid Margin="0,0,0,9"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Export earnings" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="ExportEarningsText" Grid.Column="1" Text="—" Foreground="#70B8A2"/></Grid>
-                        <Grid Margin="0,0,0,9"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Import cost" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="ImportCostText" Grid.Column="1" Text="—"/></Grid>
+                        
                         <Separator Background="#3A414B" Margin="0,8"/>
                         <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Net energy value" FontWeight="SemiBold"/><TextBlock x:Name="NetEnergyValueText" Grid.Column="1" Text="—" FontWeight="SemiBold"/></Grid>
                         <TextBlock Text="Excludes daily supply charges, subscription and other bill adjustments." Foreground="{StaticResource MutedBrush}" FontSize="10" TextWrapping="Wrap" Margin="0,10,0,0"/>
                         <TextBlock x:Name="AmberStatusText" Text="Amber usage and price intervals will appear here." Foreground="{StaticResource MutedBrush}" FontSize="10" TextWrapping="Wrap" Margin="0,7,0,0"/>
                     </StackPanel>
                 </Border>
-                <Border Background="{StaticResource PanelBrush}" CornerRadius="14" Padding="14">
-                    <StackPanel>
-                        <TextBlock Text="BATTERY" FontSize="15" FontWeight="SemiBold"/>
-                        <TextBlock Text="40 kWh nameplate capacity" Foreground="{StaticResource MutedBrush}" FontSize="11" Margin="0,4,0,15"/>
-                        <TextBlock Text="State of charge" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
-                        <Border x:Name="BatterySocBar" Background="#70B8A2" Height="10" Width="0" HorizontalAlignment="Left" CornerRadius="5" Margin="0,8,0,12"/>
-                        <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Charge / discharge" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="BatteryPowerSummaryText" Grid.Column="1" Text="— kW"/></Grid>
-                    </StackPanel>
-                </Border>
+                
             </StackPanel>
         </Grid>
         <Grid Grid.Row="3" Margin="0,8,0,0" MinHeight="0">
             <Grid.ColumnDefinitions><ColumnDefinition Width="0.85*"/><ColumnDefinition Width="1.5*"/></Grid.ColumnDefinitions>
             <Border Grid.Column="0" Background="{StaticResource PanelBrush}" CornerRadius="14" Padding="12" Margin="0,0,10,0">
                 <StackPanel>
-                    <TextBlock Text="SIGENERGY DAILY TOTALS" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,6"/>
-                    <Grid Margin="0,0,0,4"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Grid imported" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="SigDailyImportText" Grid.Column="1" Text="— kWh"/></Grid>
-                    <Grid Margin="0,0,0,4"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Grid exported" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="SigDailyExportText" Grid.Column="1" Text="— kWh"/></Grid>
+                    <TextBlock Text="SIGENERGY DAILY ENERGY" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,3"/>
+                    <TextBlock Text="Inverter-side totals · estimates where noted" Foreground="{StaticResource MutedBrush}" FontSize="9" Margin="0,0,0,5"/>
+                    
                     <Grid Margin="0,0,0,7"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Solar generated" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="SigDailySolarText" Grid.Column="1" Text="— kWh"/></Grid>
                     <Grid Margin="0,0,0,7"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Home load" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="SigDailyLoadText" Grid.Column="1" Text="— kWh"/></Grid>
                     <Grid Margin="0,0,0,7"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Battery charged" Foreground="{StaticResource MutedBrush}"/><TextBlock x:Name="SigDailyChargeText" Grid.Column="1" Text="— kWh"/></Grid>
