@@ -58,7 +58,7 @@ public partial class MainWindow : Window
         try
         {
             _settings = AppSettings.Load();
-            _sigenergy = new SigenergyModbusClient(_settings.SigenergyHost, _settings.SigenergyPort, _settings.SigenergyUnitId);
+            _sigenergy = new SigenergyModbusClient(_settings.SigenergyHost, _settings.SigenergyPort, _settings.SigenergyUnitId, _settings.SigenergyInverterUnitId);
             _refreshTimer.Interval = TimeSpan.FromSeconds(_settings.PollIntervalSeconds);
             _refreshTimer.Tick += RefreshTimer_Tick;
             _refreshTimer.Start();
