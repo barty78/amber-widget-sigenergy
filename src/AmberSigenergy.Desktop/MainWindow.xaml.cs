@@ -4,6 +4,17 @@ using System.Windows.Controls;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using Forms = System.Windows.Forms;
+using Application = System.Windows.Application;
+using Window = System.Windows.Window;
+using Color = System.Windows.Media.Color;
+using ColorConverter = System.Windows.Media.ColorConverter;
+using Canvas = System.Windows.Controls.Canvas;
+using TextBlock = System.Windows.Controls.TextBlock;
+using MessageBox = System.Windows.MessageBox;
+using MessageBoxButton = System.Windows.MessageBoxButton;
+using MessageBoxImage = System.Windows.MessageBoxImage;
+using RoutedEventArgs = System.Windows.RoutedEventArgs;
+using SizeChangedEventArgs = System.Windows.SizeChangedEventArgs;
 using AmberSigenergy.Desktop.Models;
 using AmberSigenergy.Desktop.Services;
 
