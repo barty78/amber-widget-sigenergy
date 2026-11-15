@@ -45,7 +45,9 @@ public partial class MainWindow : Window
         trayMenu.Items.Add("Exit", null, (_, _) => ExitFromTray());
         _trayIcon = new Forms.NotifyIcon
         {
-            Icon = System.Drawing.SystemIcons.Application,
+            Icon = File.Exists(Path.Combine(AppContext.BaseDirectory, "AmberSigenergy.ico"))
+                ? new System.Drawing.Icon(Path.Combine(AppContext.BaseDirectory, "AmberSigenergy.ico"))
+                : System.Drawing.SystemIcons.Application,
             Text = "Amber + Sigenergy",
             ContextMenuStrip = trayMenu,
             Visible = true
